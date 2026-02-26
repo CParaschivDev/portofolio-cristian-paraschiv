@@ -4,7 +4,26 @@
   flex-direction: column;
   gap: 6rem;
   padding: 2.5rem clamp(1.5rem, 4vw, 5rem) 3.5rem;
+  position: relative;
+  overflow: visible;
 }
+
+.page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at 20% 15%,
+    rgba(124, 255, 91, 0.12),
+    transparent 50%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+
 
 .nav {
   display: flex;
@@ -13,12 +32,13 @@
   gap: 1.5rem;
   position: sticky;
   top: 1.5rem;
-  z-index: 5;
+  z-index: 20;
   backdrop-filter: blur(18px);
   background: color-mix(in srgb, var(--surface) 75%, transparent);
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.8rem 1.6rem;
+  animation: fade-down 0.7s ease both;
 }
 
 .brand {
@@ -57,7 +77,7 @@
   height: 2px;
   border-radius: 999px;
   background: var(--accent);
-  box-shadow: 0 8px 20px rgba(244, 198, 119, 0.45);
+  box-shadow: 0 8px 20px rgba(124, 255, 91, 0.45);
 }
 
 .nav-cta {
@@ -74,6 +94,7 @@
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 3rem;
   align-items: center;
+  animation: fade-up 0.9s ease both;
 }
 
 .hero-content h1 {
@@ -104,6 +125,31 @@
   letter-spacing: 0.02em;
 }
 
+.hero-signal {
+  margin-top: 1.6rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+}
+
+.signal-label {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.signal-value {
+  display: block;
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+
 .hero-actions {
   display: flex;
   gap: 1rem;
@@ -118,6 +164,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+  transform: translateY(0);
 }
 
 .btn.primary {
@@ -158,6 +214,15 @@
   position: relative;
   overflow: hidden;
   animation: float 6s ease-in-out infinite;
+}
+
+.hero-card::after {
+  content: '';
+  position: absolute;
+  inset: -40% 30% auto -40%;
+  height: 120%;
+  background: linear-gradient(120deg, transparent, rgba(124, 255, 91, 0.12), transparent);
+  animation: sweep 4s ease-in-out infinite;
 }
 
 .card-header {
@@ -248,12 +313,26 @@
   border-radius: 20px;
   padding: 1.5rem;
   background: color-mix(in srgb, var(--surface) 90%, transparent);
+  animation: card-rise 0.8s ease both;
+}
+
+.about-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.about-card:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.about-card:nth-child(3) {
+  animation-delay: 0.2s;
 }
 
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.8rem;
+  perspective: 1200px;
 }
 
 .project-card {
@@ -265,11 +344,53 @@
   flex-direction: column;
   gap: 1rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: card-rise 0.9s ease both;
+  transform-style: preserve-3d;
+}
+
+.project-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.project-card:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.project-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.project-card:nth-child(4) {
+  animation-delay: 0.28s;
+}
+
+.project-card:nth-child(5) {
+  animation-delay: 0.36s;
 }
 
 .project-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-10px) rotateX(2deg) rotateY(-2deg);
   box-shadow: var(--shadow-strong);
+}
+
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: linear-gradient(
+    140deg,
+    rgba(124, 255, 91, 0.08),
+    transparent 35%,
+    rgba(82, 210, 140, 0.08)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.project-card:hover::after {
+  opacity: 1;
 }
 
 .project-link {
@@ -310,7 +431,7 @@
 
 .project-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(244, 198, 119, 0.3);
+  box-shadow: 0 10px 20px rgba(124, 255, 91, 0.3);
 }
 
 .project-highlights {
@@ -333,6 +454,22 @@
   position: absolute;
   left: 0;
   color: var(--accent);
+}
+
+.project-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.metric-chip {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(124, 255, 91, 0.12);
+  border: 1px solid rgba(124, 255, 91, 0.35);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
 .project-filters {
@@ -373,13 +510,35 @@
   color: var(--dark);
   border-color: var(--accent);
   background: var(--accent);
-  box-shadow: 0 12px 24px rgba(244, 198, 119, 0.35);
+  box-shadow: 0 12px 24px rgba(124, 255, 91, 0.35);
 }
 
 .skills-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
+}
+
+.skill-matrix {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  padding: 1.4rem;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+
+.matrix-card {
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+}
+
+.matrix-title {
+  font-family: var(--font-display);
+  margin-bottom: 0.8rem;
 }
 
 .skills-card {
@@ -390,6 +549,39 @@
   box-shadow: var(--shadow);
   display: grid;
   gap: 1rem;
+  animation: card-rise 0.9s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.skills-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, rgba(124, 255, 91, 0.08), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.skills-card:hover::after {
+  opacity: 1;
+}
+
+.skills-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.skills-card:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.skills-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.skills-card:nth-child(4) {
+  animation-delay: 0.28s;
 }
 
 .skills-card .skill-chip {
@@ -429,6 +621,7 @@
   background: var(--surface);
   box-shadow: var(--shadow-strong);
   padding: 2rem;
+  animation: modal-rise 0.35s ease both;
 }
 
 .modal-header {
@@ -519,6 +712,75 @@
   }
   50% {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-20%) rotate(2deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(60%) rotate(2deg);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
   }
 }
 

@@ -15,6 +15,7 @@ function App() {
       link: 'https://github.com/CParaschivDev/AI-Powered-3D-Facial-Recognition-for-Crime-Intelligence-via-Reconstructive-and-Predictive-Methods',
       linkLabel: 'View repo',
       categories: ['ML', 'Apps', 'Data', 'Visualization'],
+      metrics: ['AUC 0.84', 'Latency 150ms', '530 IDs'],
       highlights: [
         '3D-aware pipeline with landmarks, reconstruction, and recognition',
         'Crime forecasting with Prophet and analytics dashboards',
@@ -38,6 +39,7 @@ function App() {
       link: 'https://www.youtube.com/watch?v=bTwgL6FEaE8&ab_channel=CristianParaschiv',
       linkLabel: 'View presentation',
       categories: ['Data', 'Visualization'],
+      metrics: ['9,996 rows', '19 features', '5010 records'],
       highlights: [
         'Audited data quality and resolved duplicates/outliers',
         'Built region and category insights for profitability',
@@ -61,6 +63,7 @@ function App() {
       link: 'https://youtu.be/pR_8gQ6yyVc',
       linkLabel: 'View demo',
       categories: ['ML', 'Data'],
+      metrics: ['RMSE 15.33', 'R2 0.83', 'MAE 6.61'],
       highlights: [
         'Compared ensemble models with RMSE, MAE, and R2',
         'Engineered features for margin and discount impact',
@@ -84,6 +87,7 @@ function App() {
       link: 'https://www.youtube.com/watch?v=Ta5A5H2d3yQ',
       linkLabel: 'View demo',
       categories: ['ML'],
+      metrics: ['Val Acc 95%+', 'AUC 0.997', '22 classes'],
       highlights: [
         '22-class classifier with 95%+ validation accuracy',
         'Class weighting to address imbalance',
@@ -107,6 +111,7 @@ function App() {
       link: 'https://www.youtube.com/watch?v=y57xK7s8nX0',
       linkLabel: 'View demo',
       categories: ['ML', 'Data'],
+      metrics: ['SVM 89.65%', 'CIFAR 52.59%', 'PCA 50 comps'],
       highlights: [
         'Compared classic ML models across two datasets',
         'Applied PCA for faster, cleaner feature space',
@@ -130,6 +135,7 @@ function App() {
       link: 'https://github.com/CParaschivDev/Explainable-ML-Bank-Marketing-Campaigns',
       linkLabel: 'View repo',
       categories: ['ML', 'Apps'],
+      metrics: ['F1 0.956', 'ROC-AUC 0.994', '41,188 rows'],
       highlights: [
         'Local and global explanations (LIME, SHAP)',
         'Model comparison and ensemble confidence',
@@ -228,6 +234,42 @@ function App() {
     },
   ]
 
+  const skillMatrix = [
+    {
+      title: 'Core',
+      skills: [
+        'Python',
+        'Scikit-learn',
+        'Pandas',
+        'SQL',
+        'Model Evaluation',
+        'Explainability (SHAP, LIME)',
+      ],
+    },
+    {
+      title: 'Advanced',
+      skills: [
+        'TensorFlow',
+        'Keras',
+        'Feature Engineering',
+        'Imbalanced Learning',
+        'Time-Series Forecasting',
+        'Object Detection (YOLO)',
+      ],
+    },
+    {
+      title: 'Familiar',
+      skills: [
+        'Power BI',
+        'Streamlit',
+        'React',
+        'FastAPI',
+        'Docker',
+        'GitHub Actions',
+      ],
+    },
+  ]
+
   return (
     <div className="page">
       <header className="nav">
@@ -239,6 +281,13 @@ function App() {
             onClick={() => setActiveSection('about')}
           >
             About
+          </a>
+          <a
+            href="#education"
+            className={activeSection === 'education' ? 'nav-active' : ''}
+            onClick={() => setActiveSection('education')}
+          >
+            Education
           </a>
           <a
             href="#projects"
@@ -283,6 +332,20 @@ function App() {
               BSc Cloud Computing (First Class) • MSc Data Science & Artificial
               Intelligence
             </p>
+            <div className="hero-signal">
+              <div>
+                <span className="signal-label">Status</span>
+                <span className="signal-value">Open to roles</span>
+              </div>
+              <div>
+                <span className="signal-label">Focus</span>
+                <span className="signal-value">Explainable AI</span>
+              </div>
+              <div>
+                <span className="signal-label">Timezone</span>
+                <span className="signal-value">EET</span>
+              </div>
+            </div>
             <div className="hero-actions">
               <a className="btn primary" href="#projects">
                 View projects
@@ -390,6 +453,13 @@ function App() {
               <article key={project.title} className="project-card">
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
+                <div className="project-metrics">
+                  {project.metrics.map((metric) => (
+                    <span key={metric} className="metric-chip">
+                      {metric}
+                    </span>
+                  ))}
+                </div>
                 <ul className="project-highlights">
                   {project.highlights.map((item) => (
                     <li key={item}>{item}</li>
@@ -467,6 +537,20 @@ function App() {
           <div className="section-head">
             <h2>Skills</h2>
             <p>A focused stack that supports end-to-end ML delivery.</p>
+          </div>
+          <div className="skill-matrix">
+            {skillMatrix.map((group) => (
+              <div key={group.title} className="matrix-card">
+                <div className="matrix-title">{group.title}</div>
+                <div className="skills-grid">
+                  {group.skills.map((skill) => (
+                    <span key={skill} className="skill-chip">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
           <div className="skills-cards">
             {skillGroups.map((group) => (
