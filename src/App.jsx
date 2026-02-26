@@ -8,6 +8,29 @@ function App() {
 
   const projects = [
     {
+      title: 'AI-Powered 3D Facial Recognition for Crime Intelligence',
+      description:
+        'Designed an end-to-end research prototype that combines 3D facial reconstruction, recognition embeddings, object detection, and crime forecasting into a unified intelligence dashboard.',
+      tags: ['PyTorch', 'YOLOv8', 'FastAPI', 'React'],
+      link: 'https://github.com/CParaschivDev/AI-Powered-3D-Facial-Recognition-for-Crime-Intelligence-via-Reconstructive-and-Predictive-Methods',
+      linkLabel: 'View repo',
+      categories: ['ML', 'Apps', 'Data', 'Visualization'],
+      highlights: [
+        '3D-aware pipeline with landmarks, reconstruction, and recognition',
+        'Crime forecasting with Prophet and analytics dashboards',
+        'Governance layer with bias monitoring and audit logging',
+      ],
+      caseStudy: {
+        problem:
+          'Bridge the gap between face recognition outputs and crime-intelligence analytics in a single workflow.',
+        solution:
+          'Built a modular stack with YOLOv8 detection, 3D reconstruction, embeddings, and a FastAPI + React dashboard.',
+        impact:
+          'Demonstrated feasibility of a unified research-only prototype with governance and fairness checks.',
+        stack: ['PyTorch', 'YOLOv8', 'FastAPI', 'React', 'Prophet'],
+      },
+    },
+    {
       title: 'Exploratory Data Analysis — Superstore 2019–2022',
       description:
         'Cleaned and analyzed a retail dataset (9,996 rows, 19 attributes) to uncover sales trends, profitability by category/region, and the impact of discounts. Applied missing-value checks, duplicate removal, outlier analysis, and log transformation to deliver actionable insights.',
@@ -77,6 +100,29 @@ function App() {
       },
     },
     {
+      title: 'Traditional ML for Image Classification',
+      description:
+        'Benchmarked SVM, Decision Tree, and KNN on Fashion MNIST and CIFAR-10 with PCA-driven dimensionality reduction and GridSearchCV tuning to balance accuracy and training time.',
+      tags: ['SVM', 'KNN', 'Decision Tree', 'PCA'],
+      link: 'https://www.youtube.com/watch?v=y57xK7s8nX0',
+      linkLabel: 'View demo',
+      categories: ['ML', 'Data'],
+      highlights: [
+        'Compared classic ML models across two datasets',
+        'Applied PCA for faster, cleaner feature space',
+        'Analyzed accuracy vs training time trade-offs',
+      ],
+      caseStudy: {
+        problem:
+          'Evaluate how classic ML algorithms perform on image datasets with different complexity.',
+        solution:
+          'Built a consistent pipeline with PCA, normalization, and GridSearchCV tuning.',
+        impact:
+          'Showed SVM as top performer on Fashion MNIST and the limits on CIFAR-10.',
+        stack: ['SVM', 'KNN', 'Decision Tree', 'PCA'],
+      },
+    },
+    {
       title: 'Explainable ML for Bank Marketing Campaigns',
       description:
         'End-to-end Streamlit app for predicting term-deposit subscriptions with LIME and SHAP explainability, model comparison, and batch prediction workflows.',
@@ -109,7 +155,7 @@ function App() {
   }, [activeFilter, projects])
 
   useEffect(() => {
-    const sections = ['about', 'projects', 'skills', 'contact']
+    const sections = ['about', 'projects', 'skills', 'contact', 'education']
     const observers = []
 
     sections.forEach((id) => {
@@ -122,7 +168,7 @@ function App() {
             setActiveSection(id)
           }
         },
-        { rootMargin: '-40% 0px -50% 0px', threshold: 0.1 }
+        { rootMargin: '-30% 0px -55% 0px', threshold: 0.15 }
       )
 
       observer.observe(el)
@@ -190,24 +236,28 @@ function App() {
           <a
             href="#about"
             className={activeSection === 'about' ? 'nav-active' : ''}
+            onClick={() => setActiveSection('about')}
           >
             About
           </a>
           <a
             href="#projects"
             className={activeSection === 'projects' ? 'nav-active' : ''}
+            onClick={() => setActiveSection('projects')}
           >
             Projects
           </a>
           <a
             href="#skills"
             className={activeSection === 'skills' ? 'nav-active' : ''}
+            onClick={() => setActiveSection('skills')}
           >
             Skills
           </a>
           <a
             href="#contact"
             className={activeSection === 'contact' ? 'nav-active' : ''}
+            onClick={() => setActiveSection('contact')}
           >
             Contact
           </a>
@@ -229,6 +279,10 @@ function App() {
               machine learning, explainability, and clean interfaces so results
               are understandable and usable.
             </p>
+            <p className="hero-edu">
+              BSc Cloud Computing (First Class) • MSc Data Science & Artificial
+              Intelligence
+            </p>
             <div className="hero-actions">
               <a className="btn primary" href="#projects">
                 View projects
@@ -243,8 +297,8 @@ function App() {
                 <span className="stat-label">applied ML projects</span>
               </div>
               <div>
-                <span className="stat">4+</span>
-                <span className="stat-label">model families</span>
+                <span className="stat">2</span>
+                <span className="stat-label">degrees in tech</span>
               </div>
               <div>
                 <span className="stat">100%</span>
@@ -288,6 +342,23 @@ function App() {
             <div className="about-card">
               <h3>Collaboration</h3>
               <p>Transparent progress, review checkpoints, and stakeholder alignment.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="education" className="section education">
+          <div className="section-head">
+            <h2>Education</h2>
+            <p>Academic foundation in cloud, data science, and AI.</p>
+          </div>
+          <div className="education-grid">
+            <div className="education-card">
+              <h3>BSc Cloud Computing</h3>
+              <p>First Class</p>
+            </div>
+            <div className="education-card">
+              <h3>MSc Data Science & Artificial Intelligence</h3>
+              <p>Recent graduate</p>
             </div>
           </div>
         </section>
