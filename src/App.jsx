@@ -1,12 +1,33 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
-function App() {
-  const [activeFilter, setActiveFilter] = useState('All')
-  const [selectedProject, setSelectedProject] = useState(null)
-  const [activeSection, setActiveSection] = useState('about')
-
-  const projects = [
+const projectsData = {
+  en: [
+    {
+      title: '3Ks Judo Club Website',
+      description:
+        'Volunteer Full-Stack Web Developer project - built the official club website from scratch with domain registration, cloud hosting, DNS configuration, and performance optimization.',
+      tags: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'WebP', 'Lazy Loading'],
+      link: 'https://3ksjudo.co.uk',
+      linkLabel: 'View live site',
+      categories: ['Apps', 'Web'],
+      metrics: ['30% faster load', 'WebP optimization', 'Interactive modules'],
+      highlights: [
+        'Full-stack development with HTML5, CSS3, JavaScript, and PHP',
+        'Domain registration, cloud hosting, and DNS configuration',
+        'Performance optimization with WebP assets and lazy loading',
+        'Interactive modules: maps, grading info, media gallery',
+      ],
+      caseStudy: {
+        problem:
+          '3Ks Judo Club needed a professional online presence to showcase their club information, class schedules, grading system, and media gallery.',
+        solution:
+          'Built an end-to-end solution including design, development, deployment, and handover with full documentation for client independence.',
+        impact:
+          'Delivered a 30% reduction in page load time through WebP optimization and lazy loading, with clear documentation enabling long-term maintainability.',
+        stack: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'GitHub'],
+      },
+    },
     {
       title: 'AI-Powered 3D Facial Recognition for Crime Intelligence',
       description:
@@ -34,7 +55,7 @@ function App() {
     {
       title: 'Exploratory Data Analysis — Superstore 2019–2022',
       description:
-        'Cleaned and analyzed a retail dataset (9,996 rows, 19 attributes) to uncover sales trends, profitability by category/region, and the impact of discounts. Applied missing-value checks, duplicate removal, outlier analysis, and log transformation to deliver actionable insights.',
+        'Cleaned and analyzed a retail dataset (9,996 rows, 19 attributes) to uncover sales trends, profitability by category/region, and the impact of discounts.',
       tags: ['Power BI', 'EDA', 'Data Cleaning'],
       link: 'https://www.youtube.com/watch?v=bTwgL6FEaE8&ab_channel=CristianParaschiv',
       linkLabel: 'View presentation',
@@ -58,7 +79,7 @@ function App() {
     {
       title: 'Profit Forecasting with Ensemble Models',
       description:
-        'Built and evaluated Random Forest and Gradient Boosting models to predict SuperStore profit, with full preprocessing, feature engineering, and metric-driven comparison (RMSE, MAE, R²).',
+        'Built and evaluated Random Forest and Gradient Boosting models to predict SuperStore profit, with full preprocessing, feature engineering, and metric-driven comparison.',
       tags: ['Python', 'Power BI', 'Random Forest', 'Gradient Boosting'],
       link: 'https://youtu.be/pR_8gQ6yyVc',
       linkLabel: 'View demo',
@@ -106,7 +127,7 @@ function App() {
     {
       title: 'Traditional ML for Image Classification',
       description:
-        'Benchmarked SVM, Decision Tree, and KNN on Fashion MNIST and CIFAR-10 with PCA-driven dimensionality reduction and GridSearchCV tuning to balance accuracy and training time.',
+        'Benchmarked SVM, Decision Tree, and KNN on Fashion MNIST and CIFAR-10 with PCA-driven dimensionality reduction and GridSearchCV tuning.',
       tags: ['SVM', 'KNN', 'Decision Tree', 'PCA'],
       link: 'https://www.youtube.com/watch?v=y57xK7s8nX0',
       linkLabel: 'View demo',
@@ -151,88 +172,428 @@ function App() {
         stack: ['Streamlit', 'Scikit-learn', 'LIME', 'SHAP'],
       },
     },
-  ]
+  ],
+  ro: [
+    {
+      title: 'Site Web 3Ks Judo Club',
+      description:
+        'Proiect de voluntar ca Full-Stack Web Developer - am construit site-ul oficial al clubului de la zero cu înregistrare domeniu, hosting cloud, configurare DNS și optimizare performanță.',
+      tags: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'WebP', 'Lazy Loading'],
+      link: 'https://3ksjudo.co.uk',
+      linkLabel: 'Vezi site',
+      categories: ['Apps', 'Web'],
+      metrics: ['30% mai rapid', 'optimizare WebP', 'module interactive'],
+      highlights: [
+        'Dezvoltare full-stack cu HTML5, CSS3, JavaScript și PHP',
+        'Înregistrare domeniu, hosting cloud și configurare DNS',
+        'Optimizare performanță cu asset-uri WebP și lazy loading',
+        'Module interactive: hărți, informații grading, galerie media',
+      ],
+      caseStudy: {
+        problem:
+          '3Ks Judo Club avea nevoie de o prezență online profesională pentru a prezenta informațiile clubului, programul claselor, sistemul de grading și galeria media.',
+        solution:
+          'Am construit o soluție end-to-end incluzând design, dezvoltare, deployment și handover cu documentație completă pentru independența clientului.',
+        impact:
+          'Am livrat o reducere de 30% a timpului de încărcare prin optimizare WebP și lazy loading, cu documentație clară pentru mentenanță pe termen lung.',
+        stack: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'GitHub'],
+      },
+    },
+    {
+      title: 'Recunoaștere Facială 3D cu AI pentru Inteligența Criminalistică',
+      description:
+        'Am proiectat un prototip de cercetare end-to-end care combină reconstrucția facială 3D, embeddings de recunoaștere, detectare obiecte și prognoză criminalistică într-un dashboard unificat.',
+      tags: ['PyTorch', 'YOLOv8', 'FastAPI', 'React'],
+      link: 'https://github.com/CParaschivDev/AI-Powered-3D-Facial-Recognition-for-Crime-Intelligence-via-Reconstructive-and-Predictive-Methods',
+      linkLabel: 'Vezi repo',
+      categories: ['ML', 'Apps', 'Data', 'Visualization'],
+      metrics: ['AUC 0.84', 'Latency 150ms', '530 ID-uri'],
+      highlights: [
+        'Pipeline 3D cu landmarks, reconstrucție și recunoaștere',
+        'Prognoză criminalistică cu Prophet și dashboard-uri analitice',
+        'Strat de guvernanță cu monitorizare bias și audit logging',
+      ],
+      caseStudy: {
+        problem:
+          'Bridge the gap between face recognition outputs and crime-intelligence analytics in a single workflow.',
+        solution:
+          'Built a modular stack with YOLOv8 detection, 3D reconstruction, embeddings, and a FastAPI + React dashboard.',
+        impact:
+          'Demonstrated feasibility of a unified research-only prototype with governance and fairness checks.',
+        stack: ['PyTorch', 'YOLOv8', 'FastAPI', 'React', 'Prophet'],
+      },
+    },
+    {
+      title: 'Analiză de Date Exploratorie — Superstore 2019–2022',
+      description:
+        'Am curățat și analizat un set de date retail (9,996 rânduri, 19 atribute) pentru a descoperi tendințe de vânzări, profitabilitate pe categorie/regiune și impactul discounturilor.',
+      tags: ['Power BI', 'EDA', 'Data Cleaning'],
+      link: 'https://www.youtube.com/watch?v=bTwgL6FEaE8&ab_channel=CristianParaschiv',
+      linkLabel: 'Vezi prezentare',
+      categories: ['Data', 'Visualization'],
+      metrics: ['9,996 rânduri', '19 features', '5010 înregistrări'],
+      highlights: [
+        'Am auditat calitatea datelor și am rezolvat duplicate/outliers',
+        'Am construit insights pe regiuni și categorii pentru profitabilitate',
+        'Am livrat recomandări acționabile pentru prețuri',
+      ],
+      caseStudy: {
+        problem:
+          'Părțile interesate aveau nevoie de o vedere clară a tendințelor de vânzări, factorilor de profit și impactului discounturilor pe regiuni și categorii.',
+        solution:
+          'Am livrat un flux complet EDA cu curățare date, transformare log și analiză vizuală țintită în Power BI.',
+        impact:
+          'Am dezvăluit oportunități de strategie de prețuri și regionale cu recomandări practice.',
+        stack: ['Power BI', 'Data Cleaning', 'EDA'],
+      },
+    },
+    {
+      title: 'Prognoză Profit cu Modele Ensemble',
+      description:
+        'Am construit și evaluat modele Random Forest și Gradient Boosting pentru a prognoza profitul SuperStore, cu preprocessing complet, feature engineering și comparație bazată pe metrici.',
+      tags: ['Python', 'Power BI', 'Random Forest', 'Gradient Boosting'],
+      link: 'https://youtu.be/pR_8gQ6yyVc',
+      linkLabel: 'Vezi demo',
+      categories: ['ML', 'Data'],
+      metrics: ['RMSE 15.33', 'R2 0.83', 'MAE 6.61'],
+      highlights: [
+        'Am comparat modele ensemble cu RMSE, MAE și R2',
+        'Am creat features pentru impactul marjei și discountului',
+        'Am tradus rezultatele modelelor în strategie de business',
+      ],
+      caseStudy: {
+        problem:
+          'Aveam nevoie de o modalitate fiabilă de a prognoza profitul și de a înțelege ce variabile conduc performanța.',
+        solution:
+          'Am construit pipeline-uri Random Forest și Gradient Boosting cu preprocessing, agregare și dashboard-uri de evaluare.',
+        impact:
+          'Am identificat cel mai stabil model și am clarificat influența discountului vs marjei asupra profitului.',
+        stack: ['Python', 'Power BI', 'Random Forest', 'Gradient Boosting'],
+      },
+    },
+    {
+      title: 'Clasificare Boli Frunze Plante',
+      description:
+        'Am construit un CNN rezidual personalizat și am fine-tunat EfficientNetV2 pentru a clasifica 22 de clase de boli ale frunzelor plantelor, cu class weighting, tuning Optuna și rezultate bune AUC/accuracy.',
+      tags: ['TensorFlow', 'Keras', 'EfficientNetV2', 'Optuna'],
+      link: 'https://www.youtube.com/watch?v=Ta5A5H2d3yQ',
+      linkLabel: 'Vezi demo',
+      categories: ['ML'],
+      metrics: ['Val Acc 95%+', 'AUC 0.997', '22 clase'],
+      highlights: [
+        'Clasificator cu 22 de clase cu 95%+ acuratețe de validare',
+        'Class weighting pentru a aborda dezechilibrul',
+        'Comparație transfer learning vs CNN personalizat',
+      ],
+      caseStudy: {
+        problem:
+          'Clasificarea bolilor frunzelor plantelor pe 22 de clase cu acuratețe ridicată sub dezechilibru de clase.',
+        solution:
+          'Am antrenat un CNN rezidual și EfficientNetV2 cu class weighting și tuning Optuna.',
+        impact:
+          'Am obținut 95%+ acuratețe de validare și AUC puternic pe clase.',
+        stack: ['TensorFlow', 'Keras', 'EfficientNetV2', 'Optuna'],
+      },
+    },
+    {
+      title: 'ML Tradițional pentru Clasificare Imagini',
+      description:
+        'Am comparat SVM, Decision Tree și KNN pe Fashion MNIST și CIFAR-10 cu reducere dimensională PCA și tuning GridSearchCV.',
+      tags: ['SVM', 'KNN', 'Decision Tree', 'PCA'],
+      link: 'https://www.youtube.com/watch?v=y57xK7s8nX0',
+      linkLabel: 'Vezi demo',
+      categories: ['ML', 'Data'],
+      metrics: ['SVM 89.65%', 'CIFAR 52.59%', 'PCA 50 comps'],
+      highlights: [
+        'Am comparat modele ML clasice pe două dataset-uri',
+        'Am aplicat PCA pentru spațiu de features mai rapid și mai curat',
+        'Am analizat trade-off-ul acuratețe vs timp de antrenare',
+      ],
+      caseStudy: {
+        problem:
+          'Evaluarea modului în care algoritmii ML clasici performează pe dataset-uri de imagini cu complexitate diferită.',
+        solution:
+          'Am construit un pipeline consistent cu PCA, normalizare și tuning GridSearchCV.',
+        impact:
+          'Am arătat SVM ca performerul top pe Fashion MNIST și limitele pe CIFAR-10.',
+        stack: ['SVM', 'KNN', 'Decision Tree', 'PCA'],
+      },
+    },
+    {
+      title: 'ML Explicabil pentru Campanii de Marketing Bancar',
+      description:
+        'Aplicație Streamlit end-to-end pentru prognozarea subscripțiilor de depozite cu explicabilitate LIME și SHAP, comparație modele și fluxuri de predicție batch.',
+      tags: ['Streamlit', 'LIME', 'SHAP', 'Scikit-learn'],
+      link: 'https://github.com/CParaschivDev/Explainable-ML-Bank-Marketing-Campaigns',
+      linkLabel: 'Vezi repo',
+      categories: ['ML', 'Apps'],
+      metrics: ['F1 0.956', 'ROC-AUC 0.994', '41,188 rânduri'],
+      highlights: [
+        'Explicații locale și globale (LIME, SHAP)',
+        'Comparație modele și încredere ensemble',
+        'Upload batch cu validare schemă',
+      ],
+      caseStudy: {
+        problem:
+          'Echipele de marketing aveau nevoie de predicții transparente și un flux de lucru în care să aibă încredere și pe care să-l auditeze.',
+        solution:
+          'Am livrat o aplicație Streamlit cu explicabilitate, comparație modele, scoring batch și validare schemă.',
+        impact:
+          'Am îmbunătățit încrederea în decizii cu predicții interpretabile și rapoarte descărcabile.',
+        stack: ['Streamlit', 'Scikit-learn', 'LIME', 'SHAP'],
+      },
+    },
+  ],
+}
 
-  const filters = ['All', 'ML', 'Data', 'Apps', 'Visualization']
+const certificationsData = {
+  en: [
+    { title: 'Machine Learning Specialization', issuer: 'Stanford Online', year: '2024', credential: 'Coursera' },
+    { title: 'Deep Learning Specialization', issuer: 'DeepLearning.AI', year: '2024', credential: 'Coursera' },
+    { title: 'Google Data Analytics Professional Certificate', issuer: 'Google', year: '2023', credential: 'Coursera' },
+    { title: 'TensorFlow Developer Certificate', issuer: 'Google', year: '2024', credential: 'TensorFlow' },
+  ],
+  ro: [
+    { title: 'Specializare Machine Learning', issuer: 'Stanford Online', year: '2024', credential: 'Coursera' },
+    { title: 'Specializare Deep Learning', issuer: 'DeepLearning.AI', year: '2024', credential: 'Coursera' },
+    { title: 'Certificat Profesional Google Data Analytics', issuer: 'Google', year: '2023', credential: 'Coursera' },
+    { title: 'Certificat Dezvoltator TensorFlow', issuer: 'Google', year: '2024', credential: 'TensorFlow' },
+  ],
+}
+
+const translations = {
+  en: {
+    about: 'About',
+    education: 'Education',
+    projects: 'Projects',
+    skills: 'Skills',
+    contact: 'Contact',
+    letsTalk: "Let's talk",
+    viewProjects: 'View projects',
+    quickContact: 'Quick contact',
+    status: 'Status',
+    openToRoles: 'Open to roles',
+    focus: 'Focus',
+    timezone: 'Timezone',
+    eet: 'EET',
+    appliedML: 'applied ML projects',
+    degrees: 'degrees in tech',
+    explainabilityFocus: 'explainability focus',
+    recentProject: 'Recent project',
+    aboutTitle: 'About me',
+    aboutText: 'I specialize in explainable ML, predictive modeling, and decision support dashboards. My focus is accuracy, clarity, and practical impact for stakeholders.',
+    workingStyle: 'Working style',
+    workingStyleText: 'Structured delivery, clear documentation, and measurable outcomes.',
+    focusSkill: 'Focus',
+    focusText: 'Explainable models, evaluation rigor, and trustworthy insights.',
+    collaboration: 'Collaboration',
+    collaborationText: 'Transparent progress, review checkpoints, and stakeholder alignment.',
+    educationTitle: 'Education',
+    educationSubtitle: 'Academic foundation in cloud, data science, and AI.',
+    bsc: 'BSc Cloud Computing',
+    bscGrade: 'First Class',
+    msc: 'MSc Data Science & Artificial Intelligence',
+    mscGrade: 'Recent graduate',
+    projectsTitle: 'Selected projects',
+    projectsSubtitle: 'A focused set of projects that highlight my data, ML, and product thinking.',
+    caseStudy: 'Case study',
+    problem: 'Problem',
+    solution: 'Solution',
+    impact: 'Impact',
+    stack: 'Stack',
+    close: 'Close',
+    skillsTitle: 'Skills',
+    skillsSubtitle: 'A focused stack that supports end-to-end ML delivery.',
+    core: 'Core',
+    advanced: 'Advanced',
+    familiar: 'Familiar',
+    machineLearning: 'Machine Learning',
+    dataAnalytics: 'Data & Analytics',
+    appsDelivery: 'Apps & Delivery',
+    productUX: 'Product & UX',
+    contactTitle: 'Contact',
+    contactText: 'Have a project or idea? Send a message and let\'s talk.',
+    email: 'Email',
+    github: 'GitHub',
+    linkedin: 'LinkedIn',
+    certifications: 'Certifications',
+    certificationsSubtitle: 'Professional certifications and continuous learning.',
+    name: 'Name',
+    message: 'Message',
+    sendMessage: 'Send message',
+    sending: 'Sending...',
+    sent: 'Sent!',
+    darkMode: 'Dark mode',
+    lightMode: 'Light mode',
+    heroEyebrow: 'MSc Data Science and Artificial Intelligence',
+    heroH1: 'Building reliable ML systems and dashboards that drive decisions.',
+    heroSubtitle: 'I help teams move from raw data to clear actions. My work blends machine learning, explainability, and clean interfaces so results are understandable and usable.',
+    heroEdu: 'BSc Cloud Computing (First Class) • MSc Data Science & Artificial Intelligence',
+    explainableAI: 'Explainable AI',
+    footer: '© 2026 Cristian Paraschiv. All rights reserved.',
+  },
+  ro: {
+    about: 'Despre',
+    education: 'Educație',
+    projects: 'Proiecte',
+    skills: 'Competențe',
+    contact: 'Contact',
+    letsTalk: 'Să vorbim',
+    viewProjects: 'Vezi proiecte',
+    quickContact: 'Contact rapid',
+    status: 'Status',
+    openToRoles: 'Disponibil pentru roluri',
+    focus: 'Focus',
+    timezone: 'Fus orar',
+    eet: 'EET',
+    appliedML: 'proiecte ML aplicate',
+    degrees: 'diplome în tech',
+    explainabilityFocus: 'focus pe explicabilitate',
+    recentProject: 'Proiect recent',
+    aboutTitle: 'Despre mine',
+    aboutText: 'Specializez în ML explicabil, modelare predictivă și tablouri de bord pentru decizii. Focusul meu este acuratețea, claritatea și impactul practic pentru părți interesate.',
+    workingStyle: 'Stil de lucru',
+    workingStyleText: 'Livrare structurată, documentație clară și rezultate măsurabile.',
+    focusSkill: 'Focus',
+    focusText: 'Modele explicabile, rigoare în evaluare și insights de încredere.',
+    collaboration: 'Colaborare',
+    collaborationText: 'Progres transparent, puncte de verificare și alinierea cu părțile interesate.',
+    educationTitle: 'Educație',
+    educationSubtitle: 'Fundament academic în cloud, știința datelor și AI.',
+    bsc: 'BSc Cloud Computing',
+    bscGrade: 'Prima Clasă',
+    msc: 'MSc Știința Datelor și Inteligența Artificială',
+    mscGrade: 'Absolvent recent',
+    projectsTitle: 'Proiecte selectate',
+    projectsSubtitle: 'Un set concentrat de proiecte care evidențiază gândirea mea în date, ML și produs.',
+    caseStudy: 'Studiu de caz',
+    problem: 'Problema',
+    solution: 'Soluția',
+    impact: 'Impactul',
+    stack: 'Tehnologii',
+    close: 'Închide',
+    skillsTitle: 'Competențe',
+    skillsSubtitle: 'Un stack concentrat care susține livrare ML end-to-end.',
+    core: 'De bază',
+    advanced: 'Avansat',
+    familiar: 'Familiar',
+    machineLearning: 'Machine Learning',
+    dataAnalytics: 'Date & Analiză',
+    appsDelivery: 'Aplicații & Livrare',
+    productUX: 'Produs & UX',
+    contactTitle: 'Contact',
+    contactText: 'Ai un proiect sau o idee? Trimite un mesaj și să vorbim.',
+    email: 'Email',
+    github: 'GitHub',
+    linkedin: 'LinkedIn',
+    certifications: 'Certificări',
+    certificationsSubtitle: 'Certificări profesionale și învățare continuă.',
+    name: 'Nume',
+    message: 'Mesaj',
+    sendMessage: 'Trimite mesaj',
+    sending: 'Se trimite...',
+    sent: 'Trimis!',
+    darkMode: 'Mod întunecat',
+    lightMode: 'Mod luminos',
+    heroEyebrow: 'MSc Știința Datelor și Inteligența Artificială',
+    heroH1: 'Construiesc sisteme ML fiabile și tablouri de bord care susțin deciziile.',
+    heroSubtitle: 'Ajut echipele să treacă de la date brute la acțiuni clare. Munca mea îmbină machine learning, explicabilitate și interfețe curate astfel încât rezultatele să fie înțelese și utilizabile.',
+    heroEdu: 'BSc Cloud Computing (Prima Clasă) • MSc Știința Datelor și Inteligența Artificială',
+    explainableAI: 'AI Explicabil',
+    close: 'Închide',
+    footer: '© 2026 Cristian Paraschiv. Toate drepturile rezervate.',
+  },
+}
+
+function App() {
+  const [activeFilter, setActiveFilter] = useState('All')
+  const [selectedProject, setSelectedProject] = useState(null)
+  const [activeSection, setActiveSection] = useState('about')
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
+  const [darkMode, setDarkMode] = useState(true)
+  const [lang, setLang] = useState('en')
+  const [formStatus, setFormStatus] = useState(null)
+
+  const t = translations[lang]
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
+  }, [darkMode])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setFormStatus('sending')
+    const form = e.target
+    const data = {
+      name: form.name.value,
+      email: form.email.value,
+      message: form.message.value,
+    }
+    
+    try {
+      const response = await fetch('https://formspree.io/f/xaqdvzvk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (response.ok) {
+        setFormStatus('sent')
+        form.reset()
+        setTimeout(() => setFormStatus(null), 3000)
+      } else {
+        setFormStatus('error')
+      }
+    } catch (error) {
+      setFormStatus('error')
+    }
+  }
+
+  const filters = ['All', 'ML', 'Data', 'Apps', 'Web', 'Visualization']
+
+  const projectsLang = projectsData[lang]
+  const certifications = certificationsData[lang]
 
   const filteredProjects = useMemo(() => {
-    if (activeFilter === 'All') return projects
-    return projects.filter((project) => project.categories.includes(activeFilter))
-  }, [activeFilter, projects])
+    if (activeFilter === 'All') return projectsLang
+    return projectsLang.filter((project) => project.categories.includes(activeFilter))
+  }, [activeFilter, projectsLang])
 
   useEffect(() => {
     const sections = ['about', 'projects', 'skills', 'contact', 'education']
     const observers = []
-
     sections.forEach((id) => {
       const el = document.getElementById(id)
       if (!el) return
-
       const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveSection(id)
-          }
-        },
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id) },
         { rootMargin: '-30% 0px -55% 0px', threshold: 0.15 }
       )
-
       observer.observe(el)
       observers.push(observer)
     })
-
-    return () => {
-      observers.forEach((observer) => observer.disconnect())
-    }
+    return () => observers.forEach((o) => o.disconnect())
   }, [])
 
-  const skillGroups = [
-    {
-      title: 'Machine Learning',
-      skills: [
-        'Scikit-learn',
-        'TensorFlow',
-        'Keras',
-        'Model Evaluation',
-        'Feature Engineering',
-        'Imbalanced Learning',
-        'Explainability (SHAP, LIME)',
-      ],
-    },
-    {
-      title: 'Data & Analytics',
-      skills: [
-        'Python',
-        'Pandas',
-        'NumPy',
-        'SQL',
-        'Power BI',
-        'Data Visualization',
-        'Exploratory Analysis',
-      ],
-    },
-    {
-      title: 'Apps & Delivery',
-      skills: [
-        'Streamlit',
-        'React',
-        'Vite',
-        'API Integration',
-        'Automation',
-        'Git & GitHub',
-      ],
-    },
-    {
-      title: 'Product & UX',
-      skills: [
-        'Dashboard Design',
-        'Information Architecture',
-        'User-Centered Design',
-        'Responsive Layouts',
-        'Presentation Storytelling',
-      ],
-    },
-  ]
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentProjectIndex((prev) => (prev + 1) % projectsLang.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [projectsLang.length])
+
+  useEffect(() => {
+    const scrollElements = document.querySelectorAll('.scroll-fade')
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible')
+        })
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    )
+    scrollElements.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
 
   const skillMatrix = [
     {
@@ -250,6 +611,7 @@ function App() {
       title: 'Advanced',
       skills: [
         'TensorFlow',
+        'PyTorch',
         'Keras',
         'Feature Engineering',
         'Imbalanced Learning',
@@ -264,6 +626,7 @@ function App() {
         'Streamlit',
         'React',
         'FastAPI',
+        'PHP',
         'Docker',
         'GitHub Actions',
       ],
@@ -280,158 +643,186 @@ function App() {
             className={activeSection === 'about' ? 'nav-active' : ''}
             onClick={() => setActiveSection('about')}
           >
-            About
+            {t.about}
           </a>
           <a
             href="#education"
             className={activeSection === 'education' ? 'nav-active' : ''}
             onClick={() => setActiveSection('education')}
           >
-            Education
+            {t.education}
           </a>
           <a
             href="#projects"
             className={activeSection === 'projects' ? 'nav-active' : ''}
             onClick={() => setActiveSection('projects')}
           >
-            Projects
+            {t.projects}
           </a>
           <a
             href="#skills"
             className={activeSection === 'skills' ? 'nav-active' : ''}
             onClick={() => setActiveSection('skills')}
           >
-            Skills
+            {t.skills}
           </a>
           <a
             href="#contact"
             className={activeSection === 'contact' ? 'nav-active' : ''}
             onClick={() => setActiveSection('contact')}
           >
-            Contact
+            {t.contact}
           </a>
         </nav>
-        <a className="nav-cta" href="mailto:paraschiv.cristian93@outlook.com">
-          Let's talk
-        </a>
+        <div className="nav-controls">
+          <button 
+            className="theme-toggle" 
+            onClick={() => setDarkMode(!darkMode)}
+            aria-label={darkMode ? t.lightMode : t.darkMode}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+          <button 
+            className="lang-toggle"
+            onClick={() => setLang(lang === 'en' ? 'ro' : 'en')}
+          >
+            {lang === 'en' ? 'RO' : 'EN'}
+          </button>
+          <a className="nav-cta" href="mailto:paraschiv.cristian93@outlook.com">
+            {t.letsTalk}
+          </a>
+        </div>
       </header>
 
       <main>
         <section className="hero">
           <div className="hero-content">
-            <p className="eyebrow">Data & ML Developer • Analytics</p>
+            <p className="eyebrow">{t.heroEyebrow}</p>
             <h1>
-              Building reliable ML systems and dashboards that drive decisions.
+              {t.heroH1}
             </h1>
             <p className="hero-subtitle">
-              I help teams move from raw data to clear actions. My work blends
-              machine learning, explainability, and clean interfaces so results
-              are understandable and usable.
+              {t.heroSubtitle}
             </p>
             <p className="hero-edu">
-              BSc Cloud Computing (First Class) • MSc Data Science & Artificial
-              Intelligence
+              {t.heroEdu}
             </p>
             <div className="hero-signal">
               <div>
-                <span className="signal-label">Status</span>
-                <span className="signal-value">Open to roles</span>
+                <span className="signal-label">{t.status}</span>
+                <span className="signal-value">{t.openToRoles}</span>
               </div>
               <div>
-                <span className="signal-label">Focus</span>
-                <span className="signal-value">Explainable AI</span>
+                <span className="signal-label">{t.focus}</span>
+                <span className="signal-value">{t.explainableAI}</span>
               </div>
               <div>
-                <span className="signal-label">Timezone</span>
-                <span className="signal-value">EET</span>
+                <span className="signal-label">{t.timezone}</span>
+                <span className="signal-value">{t.eet}</span>
               </div>
             </div>
             <div className="hero-actions">
               <a className="btn primary" href="#projects">
-                View projects
+                {t.viewProjects}
               </a>
               <a className="btn ghost" href="#contact">
-                Quick contact
+                {t.quickContact}
               </a>
             </div>
             <div className="hero-stats">
               <div>
-                <span className="stat">8+</span>
-                <span className="stat-label">applied ML projects</span>
+                <span className="stat">7</span>
+                <span className="stat-label">{t.appliedML}</span>
               </div>
               <div>
                 <span className="stat">2</span>
-                <span className="stat-label">degrees in tech</span>
+                <span className="stat-label">{t.degrees}</span>
               </div>
               <div>
                 <span className="stat">100%</span>
-                <span className="stat-label">explainability focus</span>
+                <span className="stat-label">{t.explainabilityFocus}</span>
               </div>
             </div>
           </div>
           <div className="hero-card" aria-hidden="true">
             <div className="card-header">
-              <span>Recent project</span>
+              <span>{t.recentProject}</span>
               <span className="dot" />
             </div>
-            <h3>Explainable ML</h3>
-            <p>Transparent predictions with LIME/SHAP and audit-ready outputs.</p>
+            <h3>{projectsLang[currentProjectIndex].title}</h3>
+            <p>{projectsLang[currentProjectIndex].description}</p>
             <div className="card-tags">
-              <span>Streamlit</span>
-              <span>SHAP</span>
-              <span>MLOps</span>
+              {projectsLang[currentProjectIndex].tags.slice(0, 3).map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
             </div>
           </div>
         </section>
 
         <section id="about" className="section about">
           <div>
-            <h2>About me</h2>
+            <h2>{t.aboutTitle}</h2>
             <p>
-              I specialize in explainable ML, predictive modeling, and decision
-              support dashboards. My focus is accuracy, clarity, and practical
-              impact for stakeholders.
+              {t.aboutText}
             </p>
           </div>
           <div className="about-grid">
             <div className="about-card">
-              <h3>Working style</h3>
-              <p>Structured delivery, clear documentation, and measurable outcomes.</p>
+              <h3>{t.workingStyle}</h3>
+              <p>{t.workingStyleText}</p>
             </div>
             <div className="about-card">
-              <h3>Focus</h3>
-              <p>Explainable models, evaluation rigor, and trustworthy insights.</p>
+              <h3>{t.focusSkill}</h3>
+              <p>{t.focusText}</p>
             </div>
             <div className="about-card">
-              <h3>Collaboration</h3>
-              <p>Transparent progress, review checkpoints, and stakeholder alignment.</p>
+              <h3>{t.collaboration}</h3>
+              <p>{t.collaborationText}</p>
             </div>
           </div>
         </section>
 
         <section id="education" className="section education">
           <div className="section-head">
-            <h2>Education</h2>
-            <p>Academic foundation in cloud, data science, and AI.</p>
+            <h2>{t.educationTitle}</h2>
+            <p>{t.educationSubtitle}</p>
           </div>
           <div className="education-grid">
             <div className="education-card">
-              <h3>BSc Cloud Computing</h3>
-              <p>First Class</p>
+              <h3>{t.bsc}</h3>
+              <p>{t.bscGrade}</p>
             </div>
             <div className="education-card">
-              <h3>MSc Data Science & Artificial Intelligence</h3>
-              <p>Recent graduate</p>
+              <h3>{t.msc}</h3>
+              <p>{t.mscGrade}</p>
             </div>
+          </div>
+        </section>
+
+        <section id="certifications" className="section certifications">
+          <div className="section-head">
+            <h2>{t.certifications}</h2>
+            <p>{t.certificationsSubtitle}</p>
+          </div>
+          <div className="certifications-grid">
+            {certifications.map((cert, index) => (
+              <div key={index} className="certification-card">
+                <h3>{cert.title}</h3>
+                <p className="cert-issuer">{cert.issuer}</p>
+                <div className="cert-meta">
+                  <span>{cert.year}</span>
+                  <span>{cert.credential}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
         <section id="projects" className="section projects">
           <div className="section-head">
-            <h2>Selected projects</h2>
+            <h2>{t.projectsTitle}</h2>
             <p>
-              A focused set of projects that highlight my data, ML, and product
-              thinking.
+              {t.projectsSubtitle}
             </p>
           </div>
           <div className="project-filters">
@@ -479,7 +870,7 @@ function App() {
                     className="project-cta"
                     onClick={() => setSelectedProject(project)}
                   >
-                    Case study
+                    {t.caseStudy}
                   </button>
                 </div>
               </article>
@@ -496,24 +887,24 @@ function App() {
                   className="modal-close"
                   onClick={() => setSelectedProject(null)}
                 >
-                  Close
+                  {t.close}
                 </button>
               </div>
               <div className="modal-body">
                 <div>
-                  <span className="modal-label">Problem</span>
+                  <span className="modal-label">{t.problem}</span>
                   <p>{selectedProject.caseStudy.problem}</p>
                 </div>
                 <div>
-                  <span className="modal-label">Solution</span>
+                  <span className="modal-label">{t.solution}</span>
                   <p>{selectedProject.caseStudy.solution}</p>
                 </div>
                 <div>
-                  <span className="modal-label">Impact</span>
+                  <span className="modal-label">{t.impact}</span>
                   <p>{selectedProject.caseStudy.impact}</p>
                 </div>
                 <div>
-                  <span className="modal-label">Stack</span>
+                  <span className="modal-label">{t.stack}</span>
                   <div className="modal-tags">
                     {selectedProject.caseStudy.stack.map((item) => (
                       <span key={item}>{item}</span>
@@ -535,11 +926,15 @@ function App() {
 
         <section id="skills" className="section skills">
           <div className="section-head">
-            <h2>Skills</h2>
-            <p>A focused stack that supports end-to-end ML delivery.</p>
+            <h2>{t.skillsTitle}</h2>
+            <p>{t.skillsSubtitle}</p>
           </div>
           <div className="skill-matrix">
-            {skillMatrix.map((group) => (
+            {[
+              { title: t.core, skills: ['Python', 'Scikit-learn', 'Pandas', 'SQL', 'Model Evaluation', 'Explainability (SHAP, LIME)'] },
+              { title: t.advanced, skills: ['TensorFlow', 'PyTorch', 'Keras', 'Feature Engineering', 'Imbalanced Learning', 'Time-Series Forecasting', 'Object Detection (YOLO)'] },
+              { title: t.familiar, skills: ['Power BI', 'Streamlit', 'React', 'FastAPI', 'PHP', 'Docker', 'GitHub Actions'] },
+            ].map((group) => (
               <div key={group.title} className="matrix-card">
                 <div className="matrix-title">{group.title}</div>
                 <div className="skills-grid">
@@ -553,7 +948,12 @@ function App() {
             ))}
           </div>
           <div className="skills-cards">
-            {skillGroups.map((group) => (
+            {[
+              { title: t.machineLearning, skills: ['Scikit-learn', 'TensorFlow', 'PyTorch', 'Keras', 'Model Evaluation', 'Feature Engineering', 'Imbalanced Learning', 'Explainability (SHAP, LIME)'] },
+              { title: t.dataAnalytics, skills: ['Python', 'Pandas', 'NumPy', 'SQL', 'Power BI', 'Data Visualization', 'Exploratory Analysis'] },
+              { title: t.appsDelivery, skills: ['Streamlit', 'React', 'Vite', 'API Integration', 'Automation', 'Git & GitHub'] },
+              { title: t.productUX, skills: ['Dashboard Design', 'Information Architecture', 'User-Centered Design', 'Responsive Layouts', 'Presentation Storytelling'] },
+            ].map((group) => (
               <div key={group.title} className="skills-card">
                 <h3>{group.title}</h3>
                 <div className="skills-grid">
@@ -570,38 +970,57 @@ function App() {
 
         <section id="contact" className="section contact">
           <div>
-            <h2>Contact</h2>
-            <p>Have a project or idea? Send a message and let's talk.</p>
+            <h2>{t.contactTitle}</h2>
+            <p>{t.contactText}</p>
           </div>
-          <div className="contact-card">
-            <div>
-              <span className="contact-label">Email</span>
-              <a href="mailto:paraschiv.cristian93@outlook.com">
-                paraschiv.cristian93@outlook.com
-              </a>
-            </div>
-            <div>
-              <span className="contact-label">GitHub</span>
-              <a href="https://github.com/CParaschivDev" target="_blank" rel="noreferrer">
-                github.com/CParaschivDev
-              </a>
-            </div>
-            <div>
-              <span className="contact-label">LinkedIn</span>
-              <a
-                href="https://www.linkedin.com/in/cristian-constantin-paraschiv-6002b0257/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                linkedin.com/in/cristian-constantin-paraschiv-6002b0257
-              </a>
+          <div className="contact-wrapper">
+            <form className="contact-form" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="name">{t.name}</label>
+                <input type="text" id="name" name="name" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input type="email" id="email" name="email" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="message">{t.message}</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+              </div>
+              <button type="submit" className="btn primary" disabled={formStatus === 'sending'}>
+                {formStatus === 'sending' ? t.sending : formStatus === 'sent' ? t.sent : t.sendMessage}
+              </button>
+            </form>
+            <div className="contact-card">
+              <div>
+                <span className="contact-label">{t.email}</span>
+                <a href="mailto:paraschiv.cristian93@outlook.com">
+                  paraschiv.cristian93@outlook.com
+                </a>
+              </div>
+              <div>
+                <span className="contact-label">{t.github}</span>
+                <a href="https://github.com/CParaschivDev" target="_blank" rel="noreferrer">
+                  github.com/CParaschivDev
+                </a>
+              </div>
+              <div>
+                <span className="contact-label">{t.linkedin}</span>
+                <a
+                  href="https://www.linkedin.com/in/cristian-constantin-paraschiv-6002b0257/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  linkedin.com/in/cristian-constantin-paraschiv-6002b0257
+                </a>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
       <footer className="footer">
-        <span>© 2026 Cristian Paraschiv. All rights reserved.</span>
+        <span>{t.footer}</span>
       </footer>
     </div>
   )
