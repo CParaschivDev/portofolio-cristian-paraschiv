@@ -500,7 +500,6 @@ const translations = {
     heroSubtitle: 'Ajut echipele să treacă de la date brute la acțiuni clare. Munca mea îmbină machine learning, explicabilitate și interfețe curate astfel încât rezultatele să fie înțelese și utilizabile.',
     heroEdu: 'BSc Cloud Computing (Prima Clasă) • MSc Știința Datelor și Inteligența Artificială',
     explainableAI: 'AI Explicabil',
-    close: 'Închide',
     footer: '© 2026 Cristian Paraschiv. Toate drepturile rezervate.',
   },
 }
