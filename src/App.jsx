@@ -507,17 +507,26 @@ const translations = {
 function App() {
   const [activeFilter, setActiveFilter] = useState('All')
   const [selectedProject, setSelectedProject] = useState(null)
-  const [activeSection, setActiveSection] = useState('about')
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
+  const [formStatus, setFormStatus] = useState(null)
+  const [activeSection, setActiveSection] = useState('about')
   const [darkMode, setDarkMode] = useState(true)
   const [lang, setLang] = useState('en')
-  const [formStatus, setFormStatus] = useState(null)
+  const [booting, setBooting] = useState(true)
 
   const t = translations[lang]
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
+
+  useEffect(() => {
+    // Simulate boot sequence
+    const timer = setTimeout(() => {
+      setBooting(false)
+    }, 2800)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -633,8 +642,20 @@ function App() {
   ]
 
   return (
-    <div className="page">
-      <header className="nav">
+    <>
+      {booting && (
+        <div className="boot-screen">
+          <div className="boot-text">
+            <p>INITIALIZING SYSTEM...</p>
+            <p>LOADING KERNEL v2.0.26...</p>
+            <p>MOUNTING AI MODULES [OK]</p>
+            <p>ESTABLISHING SECURE CONNECTION...</p>
+            <p className="boot-blink">ACCESS GRANTED █</p>
+          </div>
+        </div>
+      )}
+      <div className={`page ${booting ? 'hidden' : ''}`}>
+        <header className="nav">
         <div className="brand">Cristian Paraschiv</div>
         <nav className="nav-links">
           <a
@@ -1020,8 +1041,11 @@ function App() {
 
       <footer className="footer">
         <span>{t.footer}</span>
-      </footer>
-    </div>
+          </footer>
+        </section>
+      </main>
+      </div>
+    </>
   )
 }
 
