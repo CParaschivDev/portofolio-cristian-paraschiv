@@ -127,3 +127,25 @@ p {
   background: var(--accent);
   color: var(--dark);
 }
+
+/* Custom Sci-Fi Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-1);
+  border-left: 1px solid var(--line);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 0; /* Sharp edges for robotic feel */
+  border: 1px solid var(--bg-1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
