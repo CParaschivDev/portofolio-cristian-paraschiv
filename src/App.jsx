@@ -1143,9 +1143,7 @@ function App() {
 
       <footer className="footer">
         <span>{t.footer}</span>
-          </footer>
-        </section>
-      </main>
+      </footer>
       </div>
     </>
   )
