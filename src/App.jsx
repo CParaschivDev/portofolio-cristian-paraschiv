@@ -1,5 +1,106 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import './App.css'
+
+const MatrixBackground = ({ darkMode }) => {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    
+    let width = window.innerWidth
+    let height = window.innerHeight
+    canvas.width = width
+    canvas.height = height
+
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>_'.split('')
+    const fontSize = 14
+    const columns = width / fontSize
+    const drops = Array(Math.floor(columns)).fill(1)
+
+    const draw = () => {
+      ctx.fillStyle = darkMode ? 'rgba(0, 5, 10, 0.08)' : 'rgba(255, 250, 240, 0.08)'
+      ctx.fillRect(0, 0, width, height)
+      
+      ctx.fillStyle = darkMode ? '#00f3ff' : '#ff6600'
+      ctx.font = fontSize + 'px monospace'
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)]
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize)
+        
+        if (drops[i] * fontSize > height && Math.random() > 0.975) {
+          drops[i] = 0
+        }
+        drops[i]++
+      }
+    }
+
+    const interval = setInterval(draw, 33)
+
+    const handleResize = () => {
+      width = window.innerWidth
+      height = window.innerHeight
+      canvas.width = width
+      canvas.height = height
+    }
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [darkMode])
+
+  return <canvas ref={canvasRef} className="matrix-canvas" />
+}
+
+const ScrambleText = ({ text }) => {
+  const [displayText, setDisplayText] = useState(text)
+  const [isHovering, setIsHovering] = useState(false)
+  
+  useEffect(() => {
+    let iteration = 0
+    let interval = null
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!<>-_\\\\/[]{}—=+*^?#________'
+    
+    const scramble = () => {
+      interval = setInterval(() => {
+        setDisplayText((_) => {
+          return text
+            .split('')
+            .map((char, index) => {
+              if (index < iteration) return text[index]
+              return chars[Math.floor(Math.random() * chars.length)]
+            })
+            .join('')
+        })
+
+        if (iteration >= text.length) clearInterval(interval)
+        iteration += 1 / 3
+      }, 30)
+    }
+
+    if (isHovering) {
+      scramble()
+    } else {
+      setDisplayText(text)
+    }
+
+    return () => clearInterval(interval)
+  }, [text, isHovering])
+
+  return (
+    <span 
+      onMouseEnter={() => setIsHovering(true)} 
+      onMouseLeave={() => setIsHovering(false)}
+      style={{ cursor: 'crosshair', display: 'inline-block' }}
+    >
+      {displayText}
+    </span>
+  )
+}
 
 const projectsData = {
   en: [
@@ -655,6 +756,7 @@ function App() {
         </div>
       )}
       <div className={`page ${booting ? 'hidden' : ''}`}>
+        <MatrixBackground darkMode={darkMode} />
         <header className="nav">
         <div className="brand">Cristian Paraschiv</div>
         <nav className="nav-links">
@@ -781,7 +883,7 @@ function App() {
 
         <section id="about" className="section about">
           <div>
-            <h2>{t.aboutTitle}</h2>
+            <h2><ScrambleText text={t.aboutTitle} /></h2>
             <p>
               {t.aboutText}
             </p>
@@ -804,7 +906,7 @@ function App() {
 
         <section id="education" className="section education">
           <div className="section-head">
-            <h2>{t.educationTitle}</h2>
+            <h2><ScrambleText text={t.educationTitle} /></h2>
             <p>{t.educationSubtitle}</p>
           </div>
           <div className="education-grid">
@@ -821,7 +923,7 @@ function App() {
 
         {/* <section id="certifications" className="section certifications">
           <div className="section-head">
-            <h2>{t.certifications}</h2>
+            <h2><ScrambleText text={t.certifications} /></h2>
             <p>{t.certificationsSubtitle}</p>
           </div>
           <div className="certifications-grid">
@@ -840,7 +942,7 @@ function App() {
 
         <section id="projects" className="section projects">
           <div className="section-head">
-            <h2>{t.projectsTitle}</h2>
+            <h2><ScrambleText text={t.projectsTitle} /></h2>
             <p>
               {t.projectsSubtitle}
             </p>
@@ -946,7 +1048,7 @@ function App() {
 
         <section id="skills" className="section skills">
           <div className="section-head">
-            <h2>{t.skillsTitle}</h2>
+            <h2><ScrambleText text={t.skillsTitle} /></h2>
             <p>{t.skillsSubtitle}</p>
           </div>
           <div className="skill-matrix">
@@ -990,7 +1092,7 @@ function App() {
 
         <section id="contact" className="section contact">
           <div>
-            <h2>{t.contactTitle}</h2>
+            <h2><ScrambleText text={t.contactTitle} /></h2>
             <p>{t.contactText}</p>
           </div>
           <div className="contact-wrapper">
