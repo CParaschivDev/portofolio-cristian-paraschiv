@@ -102,6 +102,41 @@ const ScrambleText = ({ text }) => {
   )
 }
 
+const SystemHUD = () => {
+  const [cpu, setCpu] = useState(12)
+  const [mem, setMem] = useState(45)
+  const [net, setNet] = useState(0)
+
+  useEffect(() => {
+    const int = setInterval(() => {
+      setCpu(Math.floor(Math.random() * 30) + 15)
+      setMem(Math.floor(Math.random() * 15) + 60)
+      setNet(Math.floor(Math.random() * 999))
+    }, 1500)
+    return () => clearInterval(int)
+  }, [])
+
+  return (
+    <div className="sys-hud-overlay">
+      <div className="sys-hud-row">
+        <span>CPU</span>
+        <div className="sys-hud-bar"><div className="sys-hud-fill" style={{ width: `${cpu}%` }}></div></div>
+        <span className="sys-hud-val">{cpu}%</span>
+      </div>
+      <div className="sys-hud-row">
+        <span>MEM</span>
+        <div className="sys-hud-bar"><div className="sys-hud-fill" style={{ width: `${mem}%` }}></div></div>
+        <span className="sys-hud-val">{mem}%</span>
+      </div>
+      <div className="sys-hud-row">
+        <span>NET</span>
+        <span style={{flex: 1}}>UPLINK_OK</span>
+        <span className="sys-hud-val">{net}B</span>
+      </div>
+    </div>
+  )
+}
+
 const projectsData = {
   en: [
     {
@@ -757,6 +792,11 @@ function App() {
       )}
       <div className={`page ${booting ? 'hidden' : ''}`}>
         <MatrixBackground darkMode={darkMode} />
+        <SystemHUD />
+        <div className="screen-reticle reticle-tl"></div>
+        <div className="screen-reticle reticle-tr"></div>
+        <div className="screen-reticle reticle-bl"></div>
+        <div className="screen-reticle reticle-br"></div>
         <header className="nav">
         <div className="brand">Cristian Paraschiv</div>
         <nav className="nav-links">
@@ -1059,12 +1099,21 @@ function App() {
             ].map((group) => (
               <div key={group.title} className="matrix-card">
                 <div className="matrix-title">{group.title}</div>
-                <div className="skills-grid">
-                  {group.skills.map((skill) => (
-                    <span key={skill} className="skill-chip">
-                      {skill}
-                    </span>
-                  ))}
+                <div className="skills-grid-bars">
+                  {group.skills.map((skill) => {
+                    const percentage = Math.min(98, Math.max(65, skill.length * 5 + 40));
+                    return (
+                      <div className="skill-bar-container" key={skill}>
+                        <div className="skill-bar-header">
+                          <span>{skill}</span>
+                          <span className="skill-bar-hex">0x{percentage.toString(16).toUpperCase()}</span>
+                        </div>
+                        <div className="skill-bar-track">
+                          <div className="skill-bar-fill" style={{ width: `${percentage}%` }}></div>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             ))}
