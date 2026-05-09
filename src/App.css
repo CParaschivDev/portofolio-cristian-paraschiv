@@ -1701,17 +1701,17 @@
 }
 
 @media (pointer: fine) {
-  body,
-  a,
-  button,
-  .project-card,
-  .filter-chip,
-  .skill-bar-container {
+  .page:not(.reduced-fx),
+  .page:not(.reduced-fx) a,
+  .page:not(.reduced-fx) button,
+  .page:not(.reduced-fx) .project-card,
+  .page:not(.reduced-fx) .filter-chip,
+  .page:not(.reduced-fx) .skill-bar-container {
     cursor: none;
   }
 
-  input,
-  textarea {
+  .page:not(.reduced-fx) input,
+  .page:not(.reduced-fx) textarea {
     cursor: text;
   }
 
