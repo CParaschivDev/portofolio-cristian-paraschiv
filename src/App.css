@@ -968,3 +968,121 @@
     transition-duration: 0.01ms !important;
   }
 }
+/* System HUD Overlay */
+.sys-hud-overlay {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  pointer-events: none;
+  z-index: 9998;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 15px;
+  border: 1px solid var(--line);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  backdrop-filter: blur(4px);
+  animation: fade-up 1s ease 3s both; /* Appears after boot */
+}
+
+.sys-hud-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 150px;
+}
+
+.sys-hud-row > span:first-child {
+  width: 25px;
+}
+
+.sys-hud-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+
+.sys-hud-fill {
+  height: 100%;
+  background: var(--accent);
+  box-shadow: 0 0 5px var(--accent);
+  transition: width 0.5s ease-out;
+}
+
+.sys-hud-val {
+  width: 25px;
+  text-align: right;
+}
+
+/* Screen Targeting Reticles */
+.screen-reticle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9997;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--accent);
+  opacity: 0.3;
+}
+.reticle-tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+.reticle-tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+.reticle-bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+.reticle-br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+/* Advanced Skill Bars (Replaces standard chips) */
+.skills-grid-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skill-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.skill-bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.skill-bar-hex {
+  color: var(--accent);
+}
+
+.skill-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 243, 255, 0.1);
+  border: 1px solid var(--line);
+  position: relative;
+  clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+}
+
+.skill-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: load-bar 1.5s ease-out forwards;
+  transform-origin: left;
+}
+
+@keyframes load-bar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
