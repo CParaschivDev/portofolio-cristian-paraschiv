@@ -820,6 +820,39 @@ function App() {
     return projectsLang.filter((project) => project.categories.includes(activeFilter))
   }, [activeFilter, projectsLang])
 
+  const projectTelemetry = useMemo(() => {
+    const countByCategory = (category) =>
+      projectsLang.filter((project) => project.categories.includes(category)).length
+
+    return [
+      {
+        code: 'PRJ',
+        value: projectsLang.length,
+        label: lang === 'en' ? 'Total projects' : 'Proiecte totale',
+      },
+      {
+        code: 'VIS',
+        value: filteredProjects.length,
+        label: lang === 'en' ? 'Visible nodes' : 'Noduri vizibile',
+      },
+      {
+        code: 'ML',
+        value: countByCategory('ML'),
+        label: lang === 'en' ? 'ML modules' : 'Module ML',
+      },
+      {
+        code: 'DATA',
+        value: countByCategory('Data'),
+        label: lang === 'en' ? 'Data systems' : 'Sisteme data',
+      },
+      {
+        code: 'FLT',
+        value: activeFilter,
+        label: lang === 'en' ? 'Active filter' : 'Filtru activ',
+      },
+    ]
+  }, [activeFilter, filteredProjects.length, lang, projectsLang])
+
   useEffect(() => {
     const sections = ['about', 'projects', 'skills', 'contact', 'education']
     const observers = []
@@ -1274,6 +1307,15 @@ function App() {
             <p>
               {t.projectsSubtitle}
             </p>
+          </div>
+          <div className="project-telemetry" aria-label="Project telemetry dashboard">
+            {projectTelemetry.map((item) => (
+              <div className="project-telemetry-card" key={item.code}>
+                <span className="telemetry-code">{item.code}</span>
+                <strong>{item.value}</strong>
+                <span className="telemetry-label">{item.label}</span>
+              </div>
+            ))}
           </div>
           <div className="project-filters">
             {filters.map((filter) => (
