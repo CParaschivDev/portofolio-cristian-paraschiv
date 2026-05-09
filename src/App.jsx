@@ -704,6 +704,8 @@ function App() {
   const [darkMode, setDarkMode] = useState(true)
   const [lang, setLang] = useState('en')
   const [booting, setBooting] = useState(true)
+  const [commandOpen, setCommandOpen] = useState(false)
+  const [commandQuery, setCommandQuery] = useState('')
 
   const t = translations[lang]
 
@@ -717,6 +719,34 @@ function App() {
       setBooting(false)
     }, 2800)
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      const tagName = event.target?.tagName
+      const isTyping =
+        ['INPUT', 'TEXTAREA', 'SELECT'].includes(tagName) ||
+        event.target?.isContentEditable
+
+      if (event.key === 'Escape') {
+        setCommandOpen(false)
+        return
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setCommandOpen((open) => !open)
+        return
+      }
+
+      if (event.key === '/' && !isTyping) {
+        event.preventDefault()
+        setCommandOpen(true)
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
   const handleSubmit = async (e) => {
@@ -832,6 +862,84 @@ function App() {
     },
   ]
 
+  const navigateTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    setActiveSection(id)
+  }
+
+  const commandItems = [
+    {
+      code: 'NAV/ABOUT',
+      label: lang === 'en' ? 'Open profile dossier' : 'Deschide dosarul profilului',
+      shortcut: 'A',
+      action: () => navigateTo('about'),
+    },
+    {
+      code: 'NAV/PROJECTS',
+      label: lang === 'en' ? 'Open project matrix' : 'Deschide matricea proiectelor',
+      shortcut: 'P',
+      action: () => navigateTo('projects'),
+    },
+    {
+      code: 'NAV/SKILLS',
+      label: lang === 'en' ? 'Scan skill modules' : 'Scaneaza modulele de skill-uri',
+      shortcut: 'S',
+      action: () => navigateTo('skills'),
+    },
+    {
+      code: 'NAV/CONTACT',
+      label: lang === 'en' ? 'Open contact uplink' : 'Deschide conexiunea de contact',
+      shortcut: 'C',
+      action: () => navigateTo('contact'),
+    },
+    {
+      code: 'SYS/THEME',
+      label: darkMode
+        ? lang === 'en'
+          ? 'Switch to amber diagnostics'
+          : 'Comuta pe diagnostice amber'
+        : lang === 'en'
+          ? 'Switch to cyan night ops'
+          : 'Comuta pe operatiuni cyan',
+      shortcut: 'T',
+      action: () => setDarkMode((mode) => !mode),
+    },
+    {
+      code: 'SYS/LANGUAGE',
+      label: lang === 'en' ? 'Switch interface to Romanian' : 'Schimba interfata in English',
+      shortcut: 'L',
+      action: () => setLang((current) => (current === 'en' ? 'ro' : 'en')),
+    },
+    {
+      code: 'UPLINK/EMAIL',
+      label: lang === 'en' ? 'Transmit email signal' : 'Trimite semnal email',
+      shortcut: 'E',
+      action: () => {
+        window.location.href = 'mailto:paraschiv.cristian93@outlook.com'
+      },
+    },
+    {
+      code: 'UPLINK/GITHUB',
+      label: lang === 'en' ? 'Open GitHub uplink' : 'Deschide uplink GitHub',
+      shortcut: 'G',
+      action: () => {
+        window.open('https://github.com/CParaschivDev', '_blank', 'noreferrer')
+      },
+    },
+  ]
+
+  const visibleCommands = commandItems.filter((item) => {
+    const query = commandQuery.trim().toLowerCase()
+    if (!query) return true
+    return `${item.code} ${item.label}`.toLowerCase().includes(query)
+  })
+
+  const runCommand = (item) => {
+    item.action()
+    setCommandOpen(false)
+    setCommandQuery('')
+  }
+
   return (
     <>
       {booting && (
@@ -853,6 +961,64 @@ function App() {
         <div className="screen-reticle reticle-tr"></div>
         <div className="screen-reticle reticle-bl"></div>
         <div className="screen-reticle reticle-br"></div>
+        {commandOpen && (
+          <div
+            className="command-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Cyber command palette"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setCommandOpen(false)
+            }}
+          >
+            <div className="command-panel">
+              <div className="command-panel-head">
+                <span>COMMAND PALETTE</span>
+                <button
+                  type="button"
+                  className="command-close"
+                  onClick={() => setCommandOpen(false)}
+                >
+                  ESC
+                </button>
+              </div>
+              <div className="command-input-wrap">
+                <span className="command-prompt">/</span>
+                <input
+                  autoFocus
+                  className="command-input"
+                  value={commandQuery}
+                  onChange={(event) => setCommandQuery(event.target.value)}
+                  placeholder={
+                    lang === 'en'
+                      ? 'Search navigation, system commands, uplinks...'
+                      : 'Cauta navigare, comenzi de sistem, uplink-uri...'
+                  }
+                />
+              </div>
+              <div className="command-list">
+                {visibleCommands.length ? (
+                  visibleCommands.map((item) => (
+                    <button
+                      key={item.code}
+                      type="button"
+                      className="command-item"
+                      onClick={() => runCommand(item)}
+                    >
+                      <span className="command-code">{item.code}</span>
+                      <span className="command-label">{item.label}</span>
+                      <span className="command-shortcut">{item.shortcut}</span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="command-empty">
+                    {lang === 'en' ? 'NO COMMAND FOUND' : 'NICIO COMANDA GASITA'}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
         <header className="nav">
         <div className="brand">Cristian Paraschiv</div>
         <nav className="nav-links">
@@ -893,6 +1059,14 @@ function App() {
           </a>
         </nav>
         <div className="nav-controls">
+          <button
+            className="command-trigger"
+            type="button"
+            onClick={() => setCommandOpen(true)}
+            aria-label="Open command palette"
+          >
+            CTRL K
+          </button>
           <button 
             className="theme-toggle" 
             onClick={() => setDarkMode(!darkMode)}
