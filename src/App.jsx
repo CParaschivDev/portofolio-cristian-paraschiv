@@ -192,6 +192,39 @@ const SystemHUD = () => {
   )
 }
 
+const MissionRail = ({ activeSection, sections, onNavigate }) => {
+  const activeIndex = Math.max(
+    sections.findIndex((section) => section.id === activeSection),
+    0
+  )
+  const progress = sections.length > 1
+    ? (activeIndex / (sections.length - 1)) * 100
+    : 0
+
+  return (
+    <aside className="mission-rail" aria-label="Mission navigation">
+      <div className="mission-rail-title">MISSION MAP</div>
+      <div className="mission-track" aria-hidden="true">
+        <span style={{ height: `${progress}%` }} />
+      </div>
+      <div className="mission-items">
+        {sections.map((section) => (
+          <button
+            key={section.id}
+            type="button"
+            className={`mission-item ${activeSection === section.id ? 'active' : ''}`}
+            onClick={() => onNavigate(section.id)}
+          >
+            <span className="mission-code">{section.code}</span>
+            <span className="mission-dot" aria-hidden="true" />
+            <span className="mission-label">{section.label}</span>
+          </button>
+        ))}
+      </div>
+    </aside>
+  )
+}
+
 const projectsData = {
   en: [
     {
@@ -940,6 +973,14 @@ function App() {
     setCommandQuery('')
   }
 
+  const missionSections = [
+    { id: 'about', code: '01', label: t.about },
+    { id: 'education', code: '02', label: t.education },
+    { id: 'projects', code: '03', label: t.projects },
+    { id: 'skills', code: '04', label: t.skills },
+    { id: 'contact', code: '05', label: t.contact },
+  ]
+
   return (
     <>
       {booting && (
@@ -957,6 +998,11 @@ function App() {
         <MatrixBackground darkMode={darkMode} />
         <CustomCursor />
         <SystemHUD />
+        <MissionRail
+          activeSection={activeSection}
+          sections={missionSections}
+          onNavigate={navigateTo}
+        />
         <div className="screen-reticle reticle-tl"></div>
         <div className="screen-reticle reticle-tr"></div>
         <div className="screen-reticle reticle-bl"></div>
