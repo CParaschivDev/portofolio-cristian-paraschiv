@@ -768,6 +768,9 @@ function App() {
       reducedFx ? 'stealth' : 'full'
     )
     document.documentElement.classList.toggle('reduced-fx', reducedFx)
+    if (reducedFx) {
+      document.documentElement.classList.remove('cursor-interactive')
+    }
   }, [reducedFx])
 
   useEffect(() => {

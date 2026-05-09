@@ -73,6 +73,18 @@
   opacity: 0.72;
 }
 
+:root.reduced-fx,
+:root.reduced-fx body,
+:root.reduced-fx .page,
+:root.reduced-fx .page * {
+  cursor: auto !important;
+}
+
+:root.reduced-fx input,
+:root.reduced-fx textarea {
+  cursor: text !important;
+}
+
 @keyframes radar-sweep {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
