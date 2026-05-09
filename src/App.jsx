@@ -102,6 +102,61 @@ const ScrambleText = ({ text }) => {
   )
 }
 
+const CustomCursor = () => {
+  const cursorRef = useRef(null)
+  const ringRef = useRef(null)
+
+  useEffect(() => {
+    let mouseX = -100
+    let mouseY = -100
+    let ringX = -100
+    let ringY = -100
+    let frameId
+
+    const onMouseMove = (e) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
+      const isInteractive = e.target.closest(
+        'a, button, input, textarea, select, [role="button"], .project-card, .skill-bar-container, .filter-chip'
+      )
+
+      document.documentElement.classList.toggle(
+        'cursor-interactive',
+        Boolean(isInteractive)
+      )
+
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`
+      }
+    }
+
+    const render = () => {
+      ringX += (mouseX - ringX) * 0.15
+      ringY += (mouseY - ringY) * 0.15
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`
+      }
+      frameId = requestAnimationFrame(render)
+    }
+
+    window.addEventListener('mousemove', onMouseMove)
+    frameId = requestAnimationFrame(render)
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+      cancelAnimationFrame(frameId)
+      document.documentElement.classList.remove('cursor-interactive')
+    }
+  }, [])
+
+  return (
+    <>
+      <div ref={cursorRef} className="cursor-dot"></div>
+      <div ref={ringRef} className="cursor-ring"></div>
+    </>
+  )
+}
+
 const SystemHUD = () => {
   const [cpu, setCpu] = useState(12)
   const [mem, setMem] = useState(45)
@@ -792,6 +847,7 @@ function App() {
       )}
       <div className={`page ${booting ? 'hidden' : ''}`}>
         <MatrixBackground darkMode={darkMode} />
+        <CustomCursor />
         <SystemHUD />
         <div className="screen-reticle reticle-tl"></div>
         <div className="screen-reticle reticle-tr"></div>

@@ -130,8 +130,8 @@ p {
 
 /* Custom Sci-Fi Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -141,7 +141,7 @@ p {
 
 ::-webkit-scrollbar-thumb {
   background: var(--accent);
-  border-radius: 0; /* Sharp edges for robotic feel */
+  border-radius: 0;
   border: 1px solid var(--bg-1);
 }
 
