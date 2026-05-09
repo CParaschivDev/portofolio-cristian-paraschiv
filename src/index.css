@@ -149,3 +149,35 @@ p {
   background: var(--text);
   box-shadow: 0 0 10px var(--accent-glow);
 }
+
+@media (max-width: 700px) {
+  body {
+    font-size: 17px;
+    letter-spacing: 0.025em;
+    background-size: 28px 28px;
+  }
+
+  body::after {
+    opacity: 0.32;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: 0.065em;
+  }
+
+  p {
+    line-height: 1.55;
+  }
+}
+
+@media (max-width: 420px) {
+  body {
+    font-size: 16px;
+    letter-spacing: 0.015em;
+  }
+}
