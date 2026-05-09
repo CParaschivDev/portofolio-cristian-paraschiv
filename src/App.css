@@ -437,16 +437,6 @@
   padding: 2rem;
   animation: hover-drift 6s ease-in-out infinite;
 }
-.hero-card::after {
-  content: 'ID: 0x8A7F';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  color: var(--muted);
-  border: none;
-}
 
 .neural-core {
   position: relative;
