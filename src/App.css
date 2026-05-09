@@ -36,6 +36,43 @@
   animation: interface-glitch 8s steps(1, end) infinite;
 }
 
+.page.reduced-fx::before,
+.page.reduced-fx::after {
+  display: none;
+}
+
+.page.reduced-fx {
+  gap: 5rem;
+}
+
+.page.reduced-fx .hero-card,
+.page.reduced-fx .dot,
+.page.reduced-fx .neural-core::before,
+.page.reduced-fx .neural-core::after,
+.page.reduced-fx .neural-scan,
+.page.reduced-fx .neural-ring,
+.page.reduced-fx .neural-pulse,
+.page.reduced-fx .neural-node,
+.page.reduced-fx .project-telemetry-card::after,
+.page.reduced-fx .skill-bar-fill {
+  animation: none !important;
+}
+
+.page.reduced-fx .neural-core,
+.page.reduced-fx .project-telemetry-card,
+.page.reduced-fx .hero-card,
+.page.reduced-fx .project-card,
+.page.reduced-fx .skills-card,
+.page.reduced-fx .about-card,
+.page.reduced-fx .education-card,
+.page.reduced-fx .contact-card {
+  box-shadow: none;
+}
+
+.page.reduced-fx .neural-core {
+  opacity: 0.72;
+}
+
 @keyframes radar-sweep {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -103,6 +140,29 @@
   background: var(--accent);
   color: var(--dark);
   box-shadow: 0 0 18px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.fx-toggle {
+  height: 36px;
+  padding: 0 0.85rem;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 0, 60, 0.08);
+  color: var(--accent-alt);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.fx-toggle:hover,
+.fx-toggle.active {
+  background: var(--accent-alt);
+  color: var(--dark);
+  box-shadow: 0 0 18px rgba(255, 0, 60, 0.42);
   transform: translateY(-1px);
 }
 

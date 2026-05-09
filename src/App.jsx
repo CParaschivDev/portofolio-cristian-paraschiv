@@ -736,7 +736,11 @@ function App() {
   const [activeSection, setActiveSection] = useState('about')
   const [darkMode, setDarkMode] = useState(true)
   const [lang, setLang] = useState('en')
-  const [booting, setBooting] = useState(true)
+  const [reducedFx, setReducedFx] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.localStorage.getItem('portfolio-fx-mode') === 'stealth'
+  })
+  const [booting, setBooting] = useState(() => !reducedFx)
   const [commandOpen, setCommandOpen] = useState(false)
   const [commandQuery, setCommandQuery] = useState('')
 
@@ -747,12 +751,24 @@ function App() {
   }, [darkMode])
 
   useEffect(() => {
-    // Simulate boot sequence
+    if (reducedFx) {
+      setBooting(false)
+      return undefined
+    }
+
     const timer = setTimeout(() => {
       setBooting(false)
     }, 2800)
     return () => clearTimeout(timer)
-  }, [])
+  }, [reducedFx])
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      'portfolio-fx-mode',
+      reducedFx ? 'stealth' : 'full'
+    )
+    document.documentElement.classList.toggle('reduced-fx', reducedFx)
+  }, [reducedFx])
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -977,6 +993,18 @@ function App() {
       action: () => setLang((current) => (current === 'en' ? 'ro' : 'en')),
     },
     {
+      code: 'SYS/FX',
+      label: reducedFx
+        ? lang === 'en'
+          ? 'Restore full cyber effects'
+          : 'Reactiveaza efectele cyber complete'
+        : lang === 'en'
+          ? 'Enable stealth performance mode'
+          : 'Activeaza modul stealth performant',
+      shortcut: 'F',
+      action: () => setReducedFx((enabled) => !enabled),
+    },
+    {
       code: 'UPLINK/EMAIL',
       label: lang === 'en' ? 'Transmit email signal' : 'Trimite semnal email',
       shortcut: 'E',
@@ -1027,19 +1055,21 @@ function App() {
           </div>
         </div>
       )}
-      <div className={`page ${booting ? 'hidden' : ''}`}>
-        <MatrixBackground darkMode={darkMode} />
-        <CustomCursor />
-        <SystemHUD />
-        <MissionRail
-          activeSection={activeSection}
-          sections={missionSections}
-          onNavigate={navigateTo}
-        />
-        <div className="screen-reticle reticle-tl"></div>
-        <div className="screen-reticle reticle-tr"></div>
-        <div className="screen-reticle reticle-bl"></div>
-        <div className="screen-reticle reticle-br"></div>
+      <div className={`page ${booting ? 'hidden' : ''} ${reducedFx ? 'reduced-fx' : ''}`}>
+        {!reducedFx && <MatrixBackground darkMode={darkMode} />}
+        {!reducedFx && <CustomCursor />}
+        {!reducedFx && <SystemHUD />}
+        {!reducedFx && (
+          <MissionRail
+            activeSection={activeSection}
+            sections={missionSections}
+            onNavigate={navigateTo}
+          />
+        )}
+        {!reducedFx && <div className="screen-reticle reticle-tl"></div>}
+        {!reducedFx && <div className="screen-reticle reticle-tr"></div>}
+        {!reducedFx && <div className="screen-reticle reticle-bl"></div>}
+        {!reducedFx && <div className="screen-reticle reticle-br"></div>}
         {commandOpen && (
           <div
             className="command-overlay"
@@ -1145,6 +1175,15 @@ function App() {
             aria-label="Open command palette"
           >
             CTRL K
+          </button>
+          <button
+            className={`fx-toggle ${reducedFx ? 'active' : ''}`}
+            type="button"
+            onClick={() => setReducedFx((enabled) => !enabled)}
+            aria-pressed={reducedFx}
+            aria-label={reducedFx ? 'Restore full effects' : 'Enable stealth mode'}
+          >
+            {reducedFx ? 'STEALTH' : 'FX ON'}
           </button>
           <button 
             className="theme-toggle" 
