@@ -1141,6 +1141,18 @@ function App() {
               <span>{t.recentProject}</span>
               <span className="dot" />
             </div>
+            <div className="neural-core">
+              <div className="neural-scan" />
+              <div className="neural-ring neural-ring-a" />
+              <div className="neural-ring neural-ring-b" />
+              <div className="neural-ring neural-ring-c" />
+              <span className="neural-node neural-node-a" />
+              <span className="neural-node neural-node-b" />
+              <span className="neural-node neural-node-c" />
+              <span className="neural-node neural-node-d" />
+              <div className="neural-pulse" />
+              <div className="neural-label">AI CORE ACTIVE</div>
+            </div>
             <h3>{projectsLang[currentProjectIndex].title}</h3>
             <p>{projectsLang[currentProjectIndex].description}</p>
             <div className="card-tags">
