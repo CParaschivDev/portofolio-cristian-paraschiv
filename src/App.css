@@ -931,6 +931,127 @@
   55%, 100% { transform: translateX(110%); }
 }
 
+.project-scanner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: stretch;
+}
+
+.scanner-input-wrap,
+.scanner-status {
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.36);
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+
+.scanner-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 54px;
+  padding: 0.55rem 0.75rem 0.55rem 1rem;
+  box-shadow: inset 0 0 18px rgba(0, 243, 255, 0.05);
+}
+
+.scanner-prompt,
+.scanner-status span,
+.scanner-clear {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.scanner-prompt {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 0.72rem;
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.scanner-input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.94rem;
+  letter-spacing: 0.06em;
+}
+
+.scanner-input::placeholder {
+  color: color-mix(in srgb, var(--muted) 65%, transparent);
+}
+
+.scanner-input:focus {
+  text-shadow: 0 0 8px rgba(0, 243, 255, 0.24);
+}
+
+.scanner-clear {
+  flex: 0 0 auto;
+  min-height: 34px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 0, 60, 0.1);
+  color: var(--accent-alt);
+  font-size: 0.65rem;
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+}
+
+.scanner-clear:hover {
+  background: var(--accent-alt);
+  color: var(--dark);
+  box-shadow: 0 0 14px rgba(255, 0, 60, 0.36);
+}
+
+.scanner-status {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.65rem;
+  row-gap: 0.1rem;
+  min-width: 190px;
+  padding: 0.65rem 0.85rem;
+  color: var(--muted);
+}
+
+.scanner-status strong {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  line-height: 1;
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.scanner-status span {
+  font-size: 0.62rem;
+}
+
+.scanner-status span:last-child {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-empty-state {
+  grid-column: 1 / -1;
+  padding: 2rem;
+  border: 1px dashed var(--line-strong);
+  background: rgba(255, 0, 60, 0.045);
+  color: var(--muted);
+  text-align: center;
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+}
+
+.project-empty-state span {
+  display: block;
+  color: var(--accent-alt);
+  font-family: var(--font-mono);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
 .project-filters {
   display: flex;
   flex-wrap: wrap;
@@ -2017,6 +2138,30 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .project-scanner {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .scanner-input-wrap {
+    min-height: 48px;
+    gap: 0.55rem;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .scanner-prompt {
+    font-size: 0.64rem;
+  }
+
+  .scanner-input {
+    font-size: 0.86rem;
+  }
+
+  .scanner-status {
+    min-width: 0;
+    grid-template-columns: auto 1fr;
+  }
+
   .project-telemetry-card {
     min-height: 96px;
     padding: 0.85rem;
@@ -2219,6 +2364,16 @@
 
   .project-telemetry {
     grid-template-columns: 1fr;
+  }
+
+  .scanner-input-wrap {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .scanner-clear {
+    min-height: 32px;
+    padding-inline: 0.55rem;
   }
 
   .project-telemetry-card {

@@ -743,6 +743,7 @@ function App() {
   const [booting, setBooting] = useState(() => !reducedFx)
   const [commandOpen, setCommandOpen] = useState(false)
   const [commandQuery, setCommandQuery] = useState('')
+  const [projectQuery, setProjectQuery] = useState('')
 
   const t = translations[lang]
 
@@ -835,9 +836,29 @@ function App() {
   const certifications = certificationsData[lang]
 
   const filteredProjects = useMemo(() => {
-    if (activeFilter === 'All') return projectsLang
-    return projectsLang.filter((project) => project.categories.includes(activeFilter))
-  }, [activeFilter, projectsLang])
+    const query = projectQuery.trim().toLowerCase()
+
+    return projectsLang.filter((project) => {
+      const matchesFilter =
+        activeFilter === 'All' || project.categories.includes(activeFilter)
+
+      if (!matchesFilter) return false
+      if (!query) return true
+
+      const searchable = [
+        project.title,
+        project.description,
+        ...project.tags,
+        ...project.categories,
+        ...project.metrics,
+        ...project.highlights,
+      ]
+        .join(' ')
+        .toLowerCase()
+
+      return searchable.includes(query)
+    })
+  }, [activeFilter, projectQuery, projectsLang])
 
   const projectTelemetry = useMemo(() => {
     const countByCategory = (category) =>
@@ -1359,6 +1380,37 @@ function App() {
               </div>
             ))}
           </div>
+          <div className="project-scanner" role="search">
+            <div className="scanner-input-wrap">
+              <span className="scanner-prompt">SCAN</span>
+              <input
+                className="scanner-input"
+                value={projectQuery}
+                onChange={(event) => setProjectQuery(event.target.value)}
+                placeholder={
+                  lang === 'en'
+                    ? 'Search projects, stacks, metrics, categories...'
+                    : 'Cauta proiecte, tehnologii, metrici, categorii...'
+                }
+                aria-label={lang === 'en' ? 'Search projects' : 'Cauta proiecte'}
+              />
+              {projectQuery ? (
+                <button
+                  type="button"
+                  className="scanner-clear"
+                  onClick={() => setProjectQuery('')}
+                  aria-label={lang === 'en' ? 'Clear project search' : 'Sterge cautarea'}
+                >
+                  CLR
+                </button>
+              ) : null}
+            </div>
+            <div className="scanner-status" aria-live="polite">
+              <span>{lang === 'en' ? 'MATCHES' : 'POTRIVIRI'}</span>
+              <strong>{filteredProjects.length}</strong>
+              <span>{projectQuery ? `QUERY:${projectQuery}` : 'QUERY:STANDBY'}</span>
+            </div>
+          </div>
           <div className="project-filters">
             {filters.map((filter) => (
               <button
@@ -1374,7 +1426,7 @@ function App() {
             ))}
           </div>
           <div className="project-grid">
-            {filteredProjects.map((project) => (
+            {filteredProjects.length ? filteredProjects.map((project) => (
               <article key={project.title} className="project-card">
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
@@ -1408,7 +1460,16 @@ function App() {
                   </button>
                 </div>
               </article>
-            ))}
+            )) : (
+              <div className="project-empty-state">
+                <span>NO SIGNAL</span>
+                <p>
+                  {lang === 'en'
+                    ? 'No projects match this scan. Clear the query or switch filters.'
+                    : 'Niciun proiect nu se potriveste. Sterge cautarea sau schimba filtrul.'}
+                </p>
+              </div>
+            )}
           </div>
         </section>
         {selectedProject ? (
