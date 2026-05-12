@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cristian Paraschiv - CV</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #111827;
+        background: #ffffff;
+      }
+
+      body {
+        margin: 0;
+        padding: 40px;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 3px solid #111827;
+        padding-bottom: 18px;
+        margin-bottom: 28px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 34px;
+        letter-spacing: 0.02em;
+      }
+
+      h2 {
+        margin: 28px 0 10px;
+        font-size: 17px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #0f766e;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+
+      ul {
+        margin: 8px 0 0;
+        padding-left: 20px;
+      }
+
+      .meta {
+        margin-top: 8px;
+        color: #374151;
+        font-size: 14px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .role {
+        margin: 18px 0 0;
+        font-weight: 700;
+      }
+
+      .muted {
+        color: #4b5563;
+      }
+
+      @media print {
+        body {
+          padding: 20px;
+        }
+      }
+
+      @media (max-width: 700px) {
+        body {
+          padding: 22px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Cristian Paraschiv</h1>
+        <div class="role">MSc Data Science and Artificial Intelligence</div>
+        <div class="meta">
+          Email: paraschiv.cristian93@outlook.com | GitHub: github.com/CParaschivDev | LinkedIn: cristian-constantin-paraschiv-6002b0257
+        </div>
+      </header>
+
+      <section>
+        <h2>Profile</h2>
+        <p>
+          Data Science and AI graduate focused on reliable machine learning systems, explainability, analytics dashboards, and practical product delivery. Strong interest in translating raw data into clear decisions through ML workflows, visual interfaces, and documented delivery.
+        </p>
+      </section>
+
+      <section>
+        <h2>Education</h2>
+        <ul>
+          <li><strong>MSc Data Science and Artificial Intelligence</strong> - Recent graduate</li>
+          <li><strong>BSc Cloud Computing</strong> - First Class</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Core Skills</h2>
+        <div class="grid">
+          <div>
+            <strong>Machine Learning</strong>
+            <p class="muted">Python, Scikit-learn, TensorFlow, PyTorch, Keras, model evaluation, feature engineering, imbalanced learning, explainability with SHAP and LIME.</p>
+          </div>
+          <div>
+            <strong>Data and Analytics</strong>
+            <p class="muted">Pandas, NumPy, SQL, Power BI, exploratory data analysis, data cleaning, dashboard design, visualization storytelling.</p>
+          </div>
+          <div>
+            <strong>Application Delivery</strong>
+            <p class="muted">React, Vite, FastAPI, Streamlit, API integration, Git, GitHub Actions, deployment workflows.</p>
+          </div>
+          <div>
+            <strong>Product and Communication</strong>
+            <p class="muted">Information architecture, responsive layout, case-study writing, stakeholder-focused recommendations.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Selected Projects</h2>
+        <ul>
+          <li><strong>AI-Powered 3D Facial Recognition for Crime Intelligence</strong> - Research prototype combining 3D reconstruction, embeddings, YOLOv8, FastAPI, React, forecasting, and governance layers.</li>
+          <li><strong>Explainable ML for Bank Marketing Campaigns</strong> - Streamlit app with LIME/SHAP explainability, model comparison, batch prediction, and schema validation.</li>
+          <li><strong>Plant Leaf Disease Classification</strong> - Residual CNN and EfficientNetV2 experiments for 22 classes, with class weighting and Optuna tuning.</li>
+          <li><strong>Profit Forecasting with Ensemble Models</strong> - Random Forest and Gradient Boosting workflows with evaluation metrics and business interpretation.</li>
+          <li><strong>3Ks Judo Club Website</strong> - Volunteer full-stack website delivery with hosting, DNS configuration, performance optimization, and handover documentation.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

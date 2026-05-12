@@ -740,19 +740,25 @@ function App() {
     if (typeof window === 'undefined') return false
     return window.localStorage.getItem('portfolio-fx-mode') === 'stealth'
   })
-  const [booting, setBooting] = useState(() => !reducedFx)
+  const [recruiterMode, setRecruiterMode] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.localStorage.getItem('portfolio-recruiter-mode') === 'true'
+  })
+  const [booting, setBooting] = useState(() => !reducedFx && !recruiterMode)
   const [commandOpen, setCommandOpen] = useState(false)
   const [commandQuery, setCommandQuery] = useState('')
   const [projectQuery, setProjectQuery] = useState('')
 
   const t = translations[lang]
+  const cvHref = `${import.meta.env.BASE_URL}Cristian-Paraschiv-CV.html`
+  const cleanView = reducedFx || recruiterMode
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
   useEffect(() => {
-    if (reducedFx) {
+    if (cleanView) {
       setBooting(false)
       return undefined
     }
@@ -761,7 +767,7 @@ function App() {
       setBooting(false)
     }, 2800)
     return () => clearTimeout(timer)
-  }, [reducedFx])
+  }, [cleanView])
 
   useEffect(() => {
     window.localStorage.setItem(
@@ -773,6 +779,17 @@ function App() {
       document.documentElement.classList.remove('cursor-interactive')
     }
   }, [reducedFx])
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      'portfolio-recruiter-mode',
+      recruiterMode ? 'true' : 'false'
+    )
+    document.documentElement.classList.toggle('recruiter-mode', recruiterMode)
+    if (recruiterMode) {
+      document.documentElement.classList.remove('cursor-interactive')
+    }
+  }, [recruiterMode])
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -1029,6 +1046,26 @@ function App() {
       action: () => setReducedFx((enabled) => !enabled),
     },
     {
+      code: 'SYS/RECRUITER',
+      label: recruiterMode
+        ? lang === 'en'
+          ? 'Exit recruiter mode'
+          : 'Iesi din modul recruiter'
+        : lang === 'en'
+          ? 'Enable recruiter mode'
+          : 'Activeaza modul recruiter',
+      shortcut: 'R',
+      action: () => setRecruiterMode((enabled) => !enabled),
+    },
+    {
+      code: 'UPLINK/CV',
+      label: lang === 'en' ? 'Open printable CV' : 'Deschide CV printabil',
+      shortcut: 'V',
+      action: () => {
+        window.open(cvHref, '_blank', 'noreferrer')
+      },
+    },
+    {
       code: 'UPLINK/EMAIL',
       label: lang === 'en' ? 'Transmit email signal' : 'Trimite semnal email',
       shortcut: 'E',
@@ -1079,21 +1116,21 @@ function App() {
           </div>
         </div>
       )}
-      <div className={`page ${booting ? 'hidden' : ''} ${reducedFx ? 'reduced-fx' : ''}`}>
-        {!reducedFx && <MatrixBackground darkMode={darkMode} />}
-        {!reducedFx && <CustomCursor />}
-        {!reducedFx && <SystemHUD />}
-        {!reducedFx && (
+      <div className={`page ${booting ? 'hidden' : ''} ${reducedFx ? 'reduced-fx' : ''} ${recruiterMode ? 'recruiter-mode' : ''}`}>
+        {!cleanView && <MatrixBackground darkMode={darkMode} />}
+        {!cleanView && <CustomCursor />}
+        {!cleanView && <SystemHUD />}
+        {!cleanView && (
           <MissionRail
             activeSection={activeSection}
             sections={missionSections}
             onNavigate={navigateTo}
           />
         )}
-        {!reducedFx && <div className="screen-reticle reticle-tl"></div>}
-        {!reducedFx && <div className="screen-reticle reticle-tr"></div>}
-        {!reducedFx && <div className="screen-reticle reticle-bl"></div>}
-        {!reducedFx && <div className="screen-reticle reticle-br"></div>}
+        {!cleanView && <div className="screen-reticle reticle-tl"></div>}
+        {!cleanView && <div className="screen-reticle reticle-tr"></div>}
+        {!cleanView && <div className="screen-reticle reticle-bl"></div>}
+        {!cleanView && <div className="screen-reticle reticle-br"></div>}
         {commandOpen && (
           <div
             className="command-overlay"
@@ -1209,6 +1246,18 @@ function App() {
           >
             {reducedFx ? 'STEALTH' : 'FX ON'}
           </button>
+          <button
+            className={`recruiter-toggle ${recruiterMode ? 'active' : ''}`}
+            type="button"
+            onClick={() => setRecruiterMode((enabled) => !enabled)}
+            aria-pressed={recruiterMode}
+            aria-label={recruiterMode ? 'Exit recruiter mode' : 'Enable recruiter mode'}
+          >
+            {recruiterMode ? 'RECRUIT' : 'RECRUITER'}
+          </button>
+          <a className="cv-link" href={cvHref} download="Cristian-Paraschiv-CV.html">
+            CV
+          </a>
           <button 
             className="theme-toggle" 
             onClick={() => setDarkMode(!darkMode)}
@@ -1277,6 +1326,32 @@ function App() {
                 <span className="stat-label">{t.explainabilityFocus}</span>
               </div>
             </div>
+            {recruiterMode ? (
+              <div className="recruiter-panel">
+                <div>
+                  <span className="recruiter-kicker">RECRUITER BRIEF</span>
+                  <h2>{lang === 'en' ? 'Fast signal for hiring teams' : 'Semnal rapid pentru recrutori'}</h2>
+                  <p>
+                    {lang === 'en'
+                      ? 'MSc Data Science and AI graduate focused on practical ML, explainability, analytics dashboards, and production-minded delivery.'
+                      : 'Absolvent MSc Data Science si AI, concentrat pe ML practic, explicabilitate, dashboard-uri analitice si livrare orientata spre produs.'}
+                  </p>
+                </div>
+                <div className="recruiter-actions">
+                  <a className="btn primary" href={cvHref} download="Cristian-Paraschiv-CV.html">
+                    {lang === 'en' ? 'Download CV' : 'Descarca CV'}
+                  </a>
+                  <a className="btn ghost" href="mailto:paraschiv.cristian93@outlook.com">
+                    {lang === 'en' ? 'Email Cristian' : 'Email Cristian'}
+                  </a>
+                </div>
+                <div className="recruiter-points">
+                  <span>MSc Data Science & AI</span>
+                  <span>Explainable ML</span>
+                  <span>React / FastAPI / Streamlit</span>
+                </div>
+              </div>
+            ) : null}
           </div>
           <div className="hero-card" aria-hidden="true">
             <div className="card-header">

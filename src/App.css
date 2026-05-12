@@ -73,6 +73,36 @@
   opacity: 0.72;
 }
 
+.page.recruiter-mode::before,
+.page.recruiter-mode::after {
+  display: none;
+}
+
+.page.recruiter-mode {
+  gap: 4.75rem;
+}
+
+.page.recruiter-mode .hero-card,
+.page.recruiter-mode .project-card,
+.page.recruiter-mode .about-card,
+.page.recruiter-mode .education-card,
+.page.recruiter-mode .skills-card,
+.page.recruiter-mode .contact-card,
+.page.recruiter-mode .project-telemetry-card {
+  box-shadow: none;
+  animation: none !important;
+}
+
+.page.recruiter-mode .neural-core {
+  display: none;
+}
+
+.page.recruiter-mode .dot,
+.page.recruiter-mode .project-telemetry-card::after,
+.page.recruiter-mode .skill-bar-fill {
+  animation: none !important;
+}
+
 :root.reduced-fx,
 :root.reduced-fx body,
 :root.reduced-fx .page,
@@ -80,8 +110,17 @@
   cursor: auto !important;
 }
 
+:root.recruiter-mode,
+:root.recruiter-mode body,
+:root.recruiter-mode .page,
+:root.recruiter-mode .page * {
+  cursor: auto !important;
+}
+
 :root.reduced-fx input,
-:root.reduced-fx textarea {
+:root.reduced-fx textarea,
+:root.recruiter-mode input,
+:root.recruiter-mode textarea {
   cursor: text !important;
 }
 
@@ -176,6 +215,35 @@
   color: var(--dark);
   box-shadow: 0 0 18px rgba(255, 0, 60, 0.42);
   transform: translateY(-1px);
+}
+
+.recruiter-toggle,
+.cv-link {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.85rem;
+  border: 1px solid var(--line-strong);
+  background: rgba(0, 243, 255, 0.06);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.recruiter-toggle:hover,
+.recruiter-toggle.active,
+.cv-link:hover {
+  background: var(--accent);
+  color: var(--dark);
+  box-shadow: 0 0 18px var(--accent-glow);
+  transform: translateY(-1px);
+  text-shadow: none;
 }
 
 .theme-toggle,
@@ -487,6 +555,57 @@
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
+}
+
+.recruiter-panel {
+  margin-top: 1.8rem;
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line-strong);
+  background:
+    linear-gradient(135deg, rgba(0, 243, 255, 0.09), transparent 45%),
+    rgba(0, 0, 0, 0.36);
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+}
+
+.recruiter-kicker {
+  display: inline-block;
+  margin-bottom: 0.55rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.recruiter-panel h2 {
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.recruiter-actions,
+.recruiter-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.recruiter-actions .btn {
+  min-height: 42px;
+  padding: 0.7rem 1rem;
+}
+
+.recruiter-points span {
+  padding: 0.38rem 0.72rem;
+  border: 1px solid var(--line);
+  background: rgba(0, 243, 255, 0.045);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
 }
 
 .stat {
@@ -1834,17 +1953,17 @@
 }
 
 @media (pointer: fine) {
-  .page:not(.reduced-fx),
-  .page:not(.reduced-fx) a,
-  .page:not(.reduced-fx) button,
-  .page:not(.reduced-fx) .project-card,
-  .page:not(.reduced-fx) .filter-chip,
-  .page:not(.reduced-fx) .skill-bar-container {
+  .page:not(.reduced-fx):not(.recruiter-mode),
+  .page:not(.reduced-fx):not(.recruiter-mode) a,
+  .page:not(.reduced-fx):not(.recruiter-mode) button,
+  .page:not(.reduced-fx):not(.recruiter-mode) .project-card,
+  .page:not(.reduced-fx):not(.recruiter-mode) .filter-chip,
+  .page:not(.reduced-fx):not(.recruiter-mode) .skill-bar-container {
     cursor: none;
   }
 
-  .page:not(.reduced-fx) input,
-  .page:not(.reduced-fx) textarea {
+  .page:not(.reduced-fx):not(.recruiter-mode) input,
+  .page:not(.reduced-fx):not(.recruiter-mode) textarea {
     cursor: text;
   }
 
@@ -1988,7 +2107,9 @@
   }
 
   .command-trigger,
-  .fx-toggle {
+  .fx-toggle,
+  .recruiter-toggle,
+  .cv-link {
     flex: 1 1 104px;
     height: 40px;
     padding: 0 0.6rem;
@@ -2052,6 +2173,19 @@
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.75rem;
+  }
+
+  .recruiter-panel {
+    padding: 1rem;
+  }
+
+  .recruiter-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .recruiter-actions .btn {
+    width: 100%;
   }
 
   .stat {
@@ -2340,7 +2474,9 @@
   }
 
   .command-trigger,
-  .fx-toggle {
+  .fx-toggle,
+  .recruiter-toggle,
+  .cv-link {
     flex-basis: calc(50% - 0.25rem);
   }
 
@@ -2360,6 +2496,15 @@
     padding: 0.7rem;
     border: 1px solid var(--line);
     background: rgba(0, 243, 255, 0.04);
+  }
+
+  .recruiter-panel h2 {
+    font-size: 1.1rem;
+  }
+
+  .recruiter-points {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .project-telemetry {
