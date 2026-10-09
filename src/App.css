@@ -2544,3 +2544,146 @@
   color: #ff4d6d;
   font-size: 0.9rem;
 }
+
+.boot-screen {
+  cursor: pointer;
+}
+
+.boot-skip {
+  position: absolute;
+  bottom: 2rem;
+  left: 3rem;
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  opacity: 0.6;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.experience-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.experience-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.experience-card p {
+  margin: 0;
+}
+
+.experience-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.experience-org {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.project-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  background: rgba(0, 243, 255, 0.05);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.skill-bar-hex {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .nav {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .brand {
+    text-align: left;
+  }
+
+  .menu-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line-strong);
+    background: rgba(0, 243, 255, 0.06);
+    color: var(--accent);
+    font-size: 1.2rem;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  }
+
+  .nav-links,
+  .nav-controls {
+    display: none;
+    grid-column: 1 / -1;
+  }
+
+  .nav.nav-open .nav-links {
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .nav.nav-open .nav-links a {
+    text-align: center;
+  }
+
+  .nav.nav-open .nav-controls {
+    display: flex;
+  }
+
+  .boot-skip {
+    left: 1.25rem;
+    right: 1.25rem;
+  }
+}
+
+@media (min-width: 761px) {
+  .nav {
+    gap: 1rem;
+  }
+
+  .brand,
+  .nav-links a,
+  .nav-controls > * {
+    white-space: nowrap;
+  }
+
+  .nav-links {
+    gap: 1.1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1320px) {
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.6rem;
+  }
+
+  .nav-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

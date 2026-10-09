@@ -1,16 +1,38 @@
-# React + Vite
+# Cristian Paraschiv · Data Science & AI Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio of Cristian Paraschiv, MSc Data Science and Artificial Intelligence (Distinction) and BSc Cloud Computing (First Class).
 
-Currently, two official plugins are available:
+**Live site:** https://cparaschivdev.github.io/portofolio-cristian-paraschiv/
+**CV (PDF):** https://cparaschivdev.github.io/portofolio-cristian-paraschiv/Cristian-Paraschiv-CV.pdf
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## What's inside
 
-## React Compiler
+- Selected ML, data, and web projects with case studies (problem, solution, impact, stack)
+- Project search and category filters
+- English / Romanian interface, dark and light themes
+- Recruiter mode: a clean, distraction-free view with a quick summary and CV download
+- Stealth mode for reduced effects (enabled automatically when the OS asks for reduced motion)
+- Command palette (`Ctrl+K` or `/`) for quick navigation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the ESLint configuration
+React 19, Vite, plain CSS. Deployed to GitHub Pages by the workflow in `.github/workflows/deploy.yml` on every push to `main`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Run locally
+
+```bash
+npm install
+npm run dev      # development server
+npm run lint     # ESLint
+npm run build    # production build in dist/
+```
+
+## Updating the CV
+
+The CV source is `public/Cristian-Paraschiv-CV.html`. After editing it, regenerate `public/Cristian-Paraschiv-CV.pdf` by printing the HTML page to PDF (A4) from Chrome or with Playwright.
+
+## Contact
+
+- Email: paraschiv.cristian93@outlook.com
+- GitHub: [CParaschivDev](https://github.com/CParaschivDev)
+- LinkedIn: [cristian-constantin-paraschiv](https://www.linkedin.com/in/cristian-constantin-paraschiv-6002b0257/)
