@@ -74,9 +74,46 @@
         color: #4b5563;
       }
 
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+
       @media print {
         body {
-          padding: 20px;
+          padding: 0;
+          line-height: 1.45;
+        }
+
+        header {
+          padding-bottom: 12px;
+          margin-bottom: 16px;
+        }
+
+        h1 {
+          font-size: 28px;
+        }
+
+        h2 {
+          margin: 16px 0 6px;
+          font-size: 14px;
+        }
+
+        p,
+        li {
+          font-size: 12.5px;
+        }
+
+        .meta {
+          font-size: 12px;
+        }
+
+        .grid {
+          gap: 4px 18px;
+        }
+
+        .grid p {
+          margin: 2px 0 6px;
         }
       }
 
@@ -97,7 +134,8 @@
         <h1>Cristian Paraschiv</h1>
         <div class="role">MSc Data Science and Artificial Intelligence (DISTINCTION)</div>
         <div class="meta">
-          Email: paraschiv.cristian93@outlook.com | GitHub: github.com/CParaschivDev | LinkedIn: cristian-constantin-paraschiv-6002b0257
+          Email: paraschiv.cristian93@outlook.com | GitHub: github.com/CParaschivDev | LinkedIn: linkedin.com/in/cristian-constantin-paraschiv-6002b0257<br />
+          Portfolio: cparaschivdev.github.io/portofolio-cristian-paraschiv
         </div>
       </header>
 
@@ -106,6 +144,16 @@
         <p>
           MSc Data Science and AI graduate (DISTINCTION) focused on reliable machine learning systems, explainability, analytics dashboards, and practical product delivery. Strong interest in translating raw data into clear decisions through ML workflows, visual interfaces, and documented delivery.
         </p>
+      </section>
+
+      <section>
+        <h2>Experience</h2>
+        <p><strong>Volunteer Full-Stack Web Developer</strong> - 3Ks Judo Club</p>
+        <ul>
+          <li>Built and launched the official club website end to end, from domain registration, cloud hosting, and DNS to handover documentation.</li>
+          <li>Developed the site with HTML5, CSS3, JavaScript, and PHP, including maps, grading information, and a media gallery.</li>
+          <li>Cut page load time by about 30% with WebP assets and lazy loading.</li>
+        </ul>
       </section>
 
       <section>
@@ -145,7 +193,6 @@
           <li><strong>Explainable ML for Bank Marketing Campaigns</strong> - Streamlit app with LIME/SHAP explainability, model comparison, batch prediction, and schema validation.</li>
           <li><strong>Plant Leaf Disease Classification</strong> - Residual CNN and EfficientNetV2 experiments for 22 classes, with class weighting and Optuna tuning.</li>
           <li><strong>Profit Forecasting with Ensemble Models</strong> - Random Forest and Gradient Boosting workflows with evaluation metrics and business interpretation.</li>
-          <li><strong>3Ks Judo Club Website</strong> - Volunteer full-stack website delivery with hosting, DNS configuration, performance optimization, and handover documentation.</li>
         </ul>
       </section>
     </main>

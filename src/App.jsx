@@ -17,6 +17,25 @@ const writeStorage = (key, value) => {
   }
 }
 
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
+
+const getInitialLang = () => {
+  const stored = readStorage('portfolio-lang')
+  if (stored === 'en' || stored === 'ro') return stored
+  if (typeof navigator === 'undefined') return 'en'
+  return navigator.language?.toLowerCase().startsWith('ro') ? 'ro' : 'en'
+}
+
+const getProjectThumbnail = (link) => {
+  const youtube = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/)
+  if (youtube) return `https://i.ytimg.com/vi/${youtube[1]}/hqdefault.jpg`
+  const github = link.match(/github\.com\/([^/]+\/[^/?#]+)/)
+  if (github) return `https://opengraph.githubassets.com/1/${github[1]}`
+  return null
+}
+
 const MatrixBackground = ({ darkMode }) => {
   const canvasRef = useRef(null)
 
@@ -35,6 +54,7 @@ const MatrixBackground = ({ darkMode }) => {
     let drops = Array(Math.floor(width / fontSize)).fill(1)
 
     const draw = () => {
+      if (document.hidden) return
       ctx.fillStyle = darkMode ? 'rgba(0, 5, 10, 0.08)' : 'rgba(255, 250, 240, 0.08)'
       ctx.fillRect(0, 0, width, height)
       
@@ -172,36 +192,62 @@ const CustomCursor = () => {
   )
 }
 
+const formatUptime = (seconds) => {
+  const minutes = String(Math.floor(seconds / 60)).padStart(2, '0')
+  const rest = String(seconds % 60).padStart(2, '0')
+  return `${minutes}:${rest}`
+}
+
 const SystemHUD = () => {
-  const [cpu, setCpu] = useState(12)
-  const [mem, setMem] = useState(45)
-  const [net, setNet] = useState(0)
+  const [fps, setFps] = useState(60)
+  const [scroll, setScroll] = useState(0)
+  const [uptime, setUptime] = useState(0)
 
   useEffect(() => {
-    const int = setInterval(() => {
-      setCpu(Math.floor(Math.random() * 30) + 15)
-      setMem(Math.floor(Math.random() * 15) + 60)
-      setNet(Math.floor(Math.random() * 999))
-    }, 1500)
-    return () => clearInterval(int)
+    let frames = 0
+    let last = performance.now()
+    let frameId
+
+    const tick = (now) => {
+      frames += 1
+      if (now - last >= 1000) {
+        setFps(Math.round((frames * 1000) / (now - last)))
+        setUptime(Math.floor(now / 1000))
+        frames = 0
+        last = now
+      }
+      frameId = requestAnimationFrame(tick)
+    }
+
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setScroll(max > 0 ? Math.round((window.scrollY / max) * 100) : 0)
+    }
+
+    frameId = requestAnimationFrame(tick)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      cancelAnimationFrame(frameId)
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [])
 
   return (
     <div className="sys-hud-overlay">
       <div className="sys-hud-row">
-        <span>CPU</span>
-        <div className="sys-hud-bar"><div className="sys-hud-fill" style={{ width: `${cpu}%` }}></div></div>
-        <span className="sys-hud-val">{cpu}%</span>
+        <span>FPS</span>
+        <div className="sys-hud-bar"><div className="sys-hud-fill" style={{ width: `${Math.min(100, (fps / 60) * 100)}%` }}></div></div>
+        <span className="sys-hud-val">{fps}</span>
       </div>
       <div className="sys-hud-row">
-        <span>MEM</span>
-        <div className="sys-hud-bar"><div className="sys-hud-fill" style={{ width: `${mem}%` }}></div></div>
-        <span className="sys-hud-val">{mem}%</span>
+        <span>SCR</span>
+        <div className="sys-hud-bar"><div className="sys-hud-fill" style={{ width: `${scroll}%` }}></div></div>
+        <span className="sys-hud-val">{scroll}%</span>
       </div>
       <div className="sys-hud-row">
-        <span>NET</span>
-        <span style={{flex: 1}}>UPLINK_OK</span>
-        <span className="sys-hud-val">{net}B</span>
+        <span>UPT</span>
+        <span style={{flex: 1}}>SESSION</span>
+        <span className="sys-hud-val">{formatUptime(uptime)}</span>
       </div>
     </div>
   )
@@ -588,6 +634,7 @@ const projectsData = {
 const translations = {
   en: {
     about: 'About',
+    experience: 'Experience',
     education: 'Education',
     projects: 'Projects',
     skills: 'Skills',
@@ -612,6 +659,23 @@ const translations = {
     focusText: 'Explainable models, evaluation rigor, and trustworthy insights.',
     collaboration: 'Collaboration',
     collaborationText: 'Transparent progress, review checkpoints, and stakeholder alignment.',
+    experienceTitle: 'Experience',
+    experienceSubtitle: 'Hands-on delivery for real users.',
+    experienceItems: [
+      {
+        role: 'Volunteer Full-Stack Web Developer',
+        org: '3Ks Judo Club',
+        summary:
+          'Built and launched the official club website end to end, from domain and hosting to handover documentation.',
+        highlights: [
+          'Registered the domain and configured cloud hosting and DNS',
+          'Developed the site with HTML5, CSS3, JavaScript, and PHP',
+          'Cut page load time by about 30% with WebP assets and lazy loading',
+          'Wrote handover documentation so the club can maintain the site independently',
+        ],
+        stack: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'DNS', 'Hosting'],
+      },
+    ],
     educationTitle: 'Education',
     educationSubtitle: 'Academic foundation in cloud, data science, and AI.',
     bsc: 'BSc Cloud Computing',
@@ -631,6 +695,11 @@ const translations = {
     core: 'Core',
     advanced: 'Advanced',
     familiar: 'Familiar',
+    tierCore: 'DAILY USE',
+    tierAdvanced: 'PROJECT-PROVEN',
+    tierFamiliar: 'WORKING KNOWLEDGE',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
     machineLearning: 'Machine Learning',
     dataAnalytics: 'Data & Analytics',
     appsDelivery: 'Apps & Delivery',
@@ -657,6 +726,7 @@ const translations = {
   },
   ro: {
     about: 'Despre',
+    experience: 'Experiență',
     education: 'Educație',
     projects: 'Proiecte',
     skills: 'Competențe',
@@ -681,6 +751,23 @@ const translations = {
     focusText: 'Modele explicabile, rigoare în evaluare și insights de încredere.',
     collaboration: 'Colaborare',
     collaborationText: 'Progres transparent, puncte de verificare și alinierea cu părțile interesate.',
+    experienceTitle: 'Experiență',
+    experienceSubtitle: 'Livrare practică pentru utilizatori reali.',
+    experienceItems: [
+      {
+        role: 'Full-Stack Web Developer (voluntar)',
+        org: '3Ks Judo Club',
+        summary:
+          'Am construit și lansat site-ul oficial al clubului cap-coadă, de la domeniu și hosting până la documentația de predare.',
+        highlights: [
+          'Am înregistrat domeniul și am configurat hosting-ul cloud și DNS-ul',
+          'Am dezvoltat site-ul cu HTML5, CSS3, JavaScript și PHP',
+          'Am redus timpul de încărcare cu aproximativ 30% prin imagini WebP și lazy loading',
+          'Am scris documentația de predare ca clubul să poată întreține site-ul independent',
+        ],
+        stack: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'DNS', 'Hosting'],
+      },
+    ],
     educationTitle: 'Educație',
     educationSubtitle: 'Fundament academic în cloud, știința datelor și AI.',
     bsc: 'BSc Cloud Computing',
@@ -700,6 +787,11 @@ const translations = {
     core: 'De bază',
     advanced: 'Avansat',
     familiar: 'Familiar',
+    tierCore: 'UZ ZILNIC',
+    tierAdvanced: 'DOVEDIT ÎN PROIECTE',
+    tierFamiliar: 'CUNOȘTINȚE DE LUCRU',
+    openMenu: 'Deschide meniul',
+    closeMenu: 'Închide meniul',
     machineLearning: 'Machine Learning',
     dataAnalytics: 'Date & Analiză',
     appsDelivery: 'Aplicații & Livrare',
@@ -732,43 +824,56 @@ function App() {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
   const [formStatus, setFormStatus] = useState(null)
   const [activeSection, setActiveSection] = useState('about')
-  const [darkMode, setDarkMode] = useState(true)
-  const [lang, setLang] = useState('en')
+  const [darkMode, setDarkMode] = useState(() => readStorage('portfolio-theme') !== 'light')
+  const [lang, setLang] = useState(getInitialLang)
   const [reducedFx, setReducedFx] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return readStorage('portfolio-fx-mode') === 'stealth'
+    const stored = readStorage('portfolio-fx-mode')
+    if (stored) return stored === 'stealth'
+    return prefersReducedMotion()
   })
   const [recruiterMode, setRecruiterMode] = useState(() => {
     if (typeof window === 'undefined') return false
     return readStorage('portfolio-recruiter-mode') === 'true'
   })
-  const [bootDone, setBootDone] = useState(false)
+  const [bootDone, setBootDone] = useState(
+    () => readStorage('portfolio-booted') === 'true' || prefersReducedMotion()
+  )
+  const [menuOpen, setMenuOpen] = useState(false)
   const [commandOpen, setCommandOpen] = useState(false)
   const [commandQuery, setCommandQuery] = useState('')
   const [projectQuery, setProjectQuery] = useState('')
 
   const t = translations[lang]
-  const cvHref = `${import.meta.env.BASE_URL}Cristian-Paraschiv-CV.html`
+  const cvHref = `${import.meta.env.BASE_URL}Cristian-Paraschiv-CV.pdf`
   const cleanView = reducedFx || recruiterMode
   const booting = !bootDone && !cleanView
 
   useEffect(() => {
     document.documentElement.lang = lang
+    writeStorage('portfolio-lang', lang)
   }, [lang])
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
+    writeStorage('portfolio-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setBootDone(true)
-    }, 2800)
-    return () => clearTimeout(timer)
-  }, [])
+    if (bootDone) {
+      writeStorage('portfolio-booted', 'true')
+      return undefined
+    }
+
+    const skipBoot = () => setBootDone(true)
+    const timer = setTimeout(skipBoot, 2800)
+    window.addEventListener('keydown', skipBoot)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('keydown', skipBoot)
+    }
+  }, [bootDone])
 
   useEffect(() => {
-    writeStorage('portfolio-fx-mode', reducedFx ? 'stealth' : 'full')
     document.documentElement.classList.toggle('reduced-fx', reducedFx)
     if (reducedFx) {
       document.documentElement.classList.remove('cursor-interactive')
@@ -793,6 +898,7 @@ function App() {
       if (event.key === 'Escape') {
         setCommandOpen(false)
         setSelectedProject(null)
+        setMenuOpen(false)
         return
       }
 
@@ -811,6 +917,11 @@ function App() {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
+
+  const toggleFx = () => {
+    writeStorage('portfolio-fx-mode', reducedFx ? 'full' : 'stealth')
+    setReducedFx(!reducedFx)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -903,7 +1014,7 @@ function App() {
   }, [activeFilter, filteredProjects.length, lang, projectsLang])
 
   useEffect(() => {
-    const sections = ['about', 'projects', 'skills', 'contact', 'education']
+    const sections = ['about', 'experience', 'education', 'projects', 'skills', 'contact']
     const observers = []
     sections.forEach((id) => {
       const el = document.getElementById(id)
@@ -928,6 +1039,7 @@ function App() {
   const navigateTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
     setActiveSection(id)
+    setMenuOpen(false)
   }
 
   const commandItems = [
@@ -983,7 +1095,7 @@ function App() {
           ? 'Enable stealth performance mode'
           : 'Activeaza modul stealth performant',
       shortcut: 'F',
-      action: () => setReducedFx((enabled) => !enabled),
+      action: toggleFx,
     },
     {
       code: 'SYS/RECRUITER',
@@ -1037,16 +1149,17 @@ function App() {
 
   const missionSections = [
     { id: 'about', code: '01', label: t.about },
-    { id: 'education', code: '02', label: t.education },
-    { id: 'projects', code: '03', label: t.projects },
-    { id: 'skills', code: '04', label: t.skills },
-    { id: 'contact', code: '05', label: t.contact },
+    { id: 'experience', code: '02', label: t.experience },
+    { id: 'education', code: '03', label: t.education },
+    { id: 'projects', code: '04', label: t.projects },
+    { id: 'skills', code: '05', label: t.skills },
+    { id: 'contact', code: '06', label: t.contact },
   ]
 
   return (
     <>
       {booting && (
-        <div className="boot-screen">
+        <div className="boot-screen" onClick={() => setBootDone(true)}>
           <div className="boot-text">
             <p>INITIALIZING SYSTEM...</p>
             <p>LOADING KERNEL v2.0.26...</p>
@@ -1054,6 +1167,9 @@ function App() {
             <p>ESTABLISHING SECURE CONNECTION...</p>
             <p className="boot-blink">ACCESS GRANTED █</p>
           </div>
+          <p className="boot-skip">
+            {lang === 'en' ? 'Click or press any key to skip' : 'Click sau orice tastă pentru a sări'}
+          </p>
         </div>
       )}
       <div className={`page ${booting ? 'hidden' : ''} ${reducedFx ? 'reduced-fx' : ''} ${recruiterMode ? 'recruiter-mode' : ''}`}>
@@ -1129,44 +1245,32 @@ function App() {
             </div>
           </div>
         )}
-        <header className="nav">
+        <header className={`nav ${menuOpen ? 'nav-open' : ''}`}>
         <div className="brand">Cristian Paraschiv</div>
-        <nav className="nav-links">
-          <a
-            href="#about"
-            className={activeSection === 'about' ? 'nav-active' : ''}
-            onClick={() => setActiveSection('about')}
-          >
-            {t.about}
-          </a>
-          <a
-            href="#education"
-            className={activeSection === 'education' ? 'nav-active' : ''}
-            onClick={() => setActiveSection('education')}
-          >
-            {t.education}
-          </a>
-          <a
-            href="#projects"
-            className={activeSection === 'projects' ? 'nav-active' : ''}
-            onClick={() => setActiveSection('projects')}
-          >
-            {t.projects}
-          </a>
-          <a
-            href="#skills"
-            className={activeSection === 'skills' ? 'nav-active' : ''}
-            onClick={() => setActiveSection('skills')}
-          >
-            {t.skills}
-          </a>
-          <a
-            href="#contact"
-            className={activeSection === 'contact' ? 'nav-active' : ''}
-            onClick={() => setActiveSection('contact')}
-          >
-            {t.contact}
-          </a>
+        <button
+          type="button"
+          className="menu-toggle"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-expanded={menuOpen}
+          aria-controls="site-menu"
+          aria-label={menuOpen ? t.closeMenu : t.openMenu}
+        >
+          {menuOpen ? '✕' : '☰'}
+        </button>
+        <nav className="nav-links" id="site-menu">
+          {missionSections.map((section) => (
+            <a
+              key={section.id}
+              href={`#${section.id}`}
+              className={activeSection === section.id ? 'nav-active' : ''}
+              onClick={() => {
+                setActiveSection(section.id)
+                setMenuOpen(false)
+              }}
+            >
+              {section.label}
+            </a>
+          ))}
         </nav>
         <div className="nav-controls">
           <button
@@ -1180,7 +1284,7 @@ function App() {
           <button
             className={`fx-toggle ${reducedFx ? 'active' : ''}`}
             type="button"
-            onClick={() => setReducedFx((enabled) => !enabled)}
+            onClick={toggleFx}
             aria-pressed={reducedFx}
             aria-label={reducedFx ? 'Restore full effects' : 'Enable stealth mode'}
           >
@@ -1195,7 +1299,7 @@ function App() {
           >
             {recruiterMode ? 'RECRUIT' : 'RECRUITER'}
           </button>
-          <a className="cv-link" href={cvHref} download="Cristian-Paraschiv-CV.html">
+          <a className="cv-link" href={cvHref} download="Cristian-Paraschiv-CV.pdf">
             CV
           </a>
           <button 
@@ -1278,7 +1382,7 @@ function App() {
                   </p>
                 </div>
                 <div className="recruiter-actions">
-                  <a className="btn primary" href={cvHref} download="Cristian-Paraschiv-CV.html">
+                  <a className="btn primary" href={cvHref} download="Cristian-Paraschiv-CV.pdf">
                     {lang === 'en' ? 'Download CV' : 'Descarca CV'}
                   </a>
                   <a className="btn ghost" href="mailto:paraschiv.cristian93@outlook.com">
@@ -1340,6 +1444,34 @@ function App() {
               <h3>{t.collaboration}</h3>
               <p>{t.collaborationText}</p>
             </div>
+          </div>
+        </section>
+
+        <section id="experience" className="section experience">
+          <div className="section-head">
+            <h2><ScrambleText text={t.experienceTitle} /></h2>
+            <p>{t.experienceSubtitle}</p>
+          </div>
+          <div className="experience-list">
+            {t.experienceItems.map((item) => (
+              <article key={item.role} className="about-card experience-card">
+                <div className="experience-head">
+                  <h3>{item.role}</h3>
+                  <span className="experience-org">{item.org}</span>
+                </div>
+                <p>{item.summary}</p>
+                <ul className="project-highlights">
+                  {item.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+                <div className="project-tags">
+                  {item.stack.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -1425,6 +1557,18 @@ function App() {
           <div className="project-grid">
             {filteredProjects.length ? filteredProjects.map((project) => (
               <article key={project.title} className="project-card">
+                {getProjectThumbnail(project.link) ? (
+                  <img
+                    className="project-thumb"
+                    src={getProjectThumbnail(project.link)}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    onError={(event) => {
+                      event.currentTarget.style.display = 'none'
+                    }}
+                  />
+                ) : null}
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
                 <div className="project-metrics">
@@ -1531,27 +1675,24 @@ function App() {
           </div>
           <div className="skill-matrix">
             {[
-              { title: t.core, skills: ['Python', 'Scikit-learn', 'Pandas', 'SQL', 'Model Evaluation', 'Explainability (SHAP, LIME)'] },
-              { title: t.advanced, skills: ['TensorFlow', 'PyTorch', 'Keras', 'Feature Engineering', 'Imbalanced Learning', 'Time-Series Forecasting', 'Object Detection (YOLO)'] },
-              { title: t.familiar, skills: ['Power BI', 'Streamlit', 'React', 'FastAPI', 'PHP', 'Docker', 'GitHub Actions'] },
+              { title: t.core, tier: t.tierCore, level: 100, skills: ['Python', 'Scikit-learn', 'Pandas', 'SQL', 'Model Evaluation', 'Explainability (SHAP, LIME)'] },
+              { title: t.advanced, tier: t.tierAdvanced, level: 78, skills: ['TensorFlow', 'PyTorch', 'Keras', 'Feature Engineering', 'Imbalanced Learning', 'Time-Series Forecasting', 'Object Detection (YOLO)'] },
+              { title: t.familiar, tier: t.tierFamiliar, level: 52, skills: ['Power BI', 'Streamlit', 'React', 'FastAPI', 'PHP', 'Docker', 'GitHub Actions'] },
             ].map((group) => (
               <div key={group.title} className="matrix-card">
                 <div className="matrix-title">{group.title}</div>
                 <div className="skills-grid-bars">
-                  {group.skills.map((skill) => {
-                    const percentage = Math.min(98, Math.max(65, skill.length * 5 + 40));
-                    return (
-                      <div className="skill-bar-container" key={skill}>
-                        <div className="skill-bar-header">
-                          <span>{skill}</span>
-                          <span className="skill-bar-hex">0x{percentage.toString(16).toUpperCase()}</span>
-                        </div>
-                        <div className="skill-bar-track">
-                          <div className="skill-bar-fill" style={{ width: `${percentage}%` }}></div>
-                        </div>
+                  {group.skills.map((skill) => (
+                    <div className="skill-bar-container" key={skill}>
+                      <div className="skill-bar-header">
+                        <span>{skill}</span>
+                        <span className="skill-bar-hex">{group.tier}</span>
                       </div>
-                    )
-                  })}
+                      <div className="skill-bar-track">
+                        <div className="skill-bar-fill" style={{ width: `${group.level}%` }}></div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
