@@ -617,7 +617,7 @@ const translations = {
     bsc: 'BSc Cloud Computing',
     bscGrade: 'First Class',
     msc: 'MSc Data Science & Artificial Intelligence',
-    mscGrade: 'Recent graduate',
+    mscGrade: 'Distinction',
     projectsTitle: 'Selected projects',
     projectsSubtitle: 'A focused set of projects that highlight my data, ML, and product thinking.',
     caseStudy: 'Case study',
@@ -652,7 +652,7 @@ const translations = {
     heroEyebrow: 'MSc Data Science and Artificial Intelligence',
     heroH1: 'Building reliable ML systems and dashboards that drive decisions.',
     heroSubtitle: 'I help teams move from raw data to clear actions. My work blends machine learning, explainability, and clean interfaces so results are understandable and usable.',
-    heroEdu: 'BSc Cloud Computing (First Class) • MSc Data Science & Artificial Intelligence',
+    heroEdu: 'BSc Cloud Computing (First Class) • MSc Data Science & Artificial Intelligence (Distinction)',
     explainableAI: 'Explainable AI',
     footer: '© 2026 Cristian Paraschiv. All rights reserved.',
   },
@@ -687,7 +687,7 @@ const translations = {
     bsc: 'BSc Cloud Computing',
     bscGrade: 'Prima Clasă',
     msc: 'MSc Știința Datelor și Inteligența Artificială',
-    mscGrade: 'Absolvent recent',
+    mscGrade: 'Distincție',
     projectsTitle: 'Proiecte selectate',
     projectsSubtitle: 'Un set concentrat de proiecte care evidențiază gândirea mea în date, ML și produs.',
     caseStudy: 'Studiu de caz',
@@ -722,7 +722,7 @@ const translations = {
     heroEyebrow: 'MSc Știința Datelor și Inteligența Artificială',
     heroH1: 'Construiesc sisteme ML fiabile și tablouri de bord care susțin deciziile.',
     heroSubtitle: 'Ajut echipele să treacă de la date brute la acțiuni clare. Munca mea îmbină machine learning, explicabilitate și interfețe curate astfel încât rezultatele să fie înțelese și utilizabile.',
-    heroEdu: 'BSc Cloud Computing (Prima Clasă) • MSc Știința Datelor și Inteligența Artificială',
+    heroEdu: 'BSc Cloud Computing (Prima Clasă) • MSc Știința Datelor și Inteligența Artificială (Distincție)',
     explainableAI: 'AI Explicabil',
     footer: '© 2026 Cristian Paraschiv. Toate drepturile rezervate.',
   },
@@ -1333,8 +1333,8 @@ function App() {
                   <h2>{lang === 'en' ? 'Fast signal for hiring teams' : 'Semnal rapid pentru recrutori'}</h2>
                   <p>
                     {lang === 'en'
-                      ? 'MSc Data Science and AI graduate focused on practical ML, explainability, analytics dashboards, and production-minded delivery.'
-                      : 'Absolvent MSc Data Science si AI, concentrat pe ML practic, explicabilitate, dashboard-uri analitice si livrare orientata spre produs.'}
+                      ? 'MSc Data Science and AI graduate (Distinction) focused on practical ML, explainability, analytics dashboards, and production-minded delivery.'
+                      : 'Absolvent MSc Data Science si AI (Distinctie), concentrat pe ML practic, explicabilitate, dashboard-uri analitice si livrare orientata spre produs.'}
                   </p>
                 </div>
                 <div className="recruiter-actions">
@@ -1346,7 +1346,7 @@ function App() {
                   </a>
                 </div>
                 <div className="recruiter-points">
-                  <span>MSc Data Science & AI</span>
+                  <span>MSc Data Science & AI (Distinction)</span>
                   <span>Explainable ML</span>
                   <span>React / FastAPI / Streamlit</span>
                 </div>
