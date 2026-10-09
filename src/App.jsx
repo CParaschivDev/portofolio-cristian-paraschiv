@@ -1,6 +1,22 @@
 import { useEffect, useMemo, useState, useRef } from 'react'
 import './App.css'
 
+const readStorage = (key) => {
+  try {
+    return window.localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+
+const writeStorage = (key, value) => {
+  try {
+    window.localStorage.setItem(key, value)
+  } catch {
+    // Storage can be unavailable (private mode, blocked cookies); preferences just won't persist.
+  }
+}
+
 const MatrixBackground = ({ darkMode }) => {
   const canvasRef = useRef(null)
 
@@ -16,8 +32,7 @@ const MatrixBackground = ({ darkMode }) => {
 
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>_'.split('')
     const fontSize = 14
-    const columns = width / fontSize
-    const drops = Array(Math.floor(columns)).fill(1)
+    let drops = Array(Math.floor(width / fontSize)).fill(1)
 
     const draw = () => {
       ctx.fillStyle = darkMode ? 'rgba(0, 5, 10, 0.08)' : 'rgba(255, 250, 240, 0.08)'
@@ -44,6 +59,8 @@ const MatrixBackground = ({ darkMode }) => {
       height = window.innerHeight
       canvas.width = width
       canvas.height = height
+      const columns = Math.floor(width / fontSize)
+      drops = Array.from({ length: columns }, (_, i) => drops[i] ?? 1)
     }
     window.addEventListener('resize', handleResize)
 
@@ -57,43 +74,41 @@ const MatrixBackground = ({ darkMode }) => {
 }
 
 const ScrambleText = ({ text }) => {
-  const [displayText, setDisplayText] = useState(text)
+  const [scrambledText, setScrambledText] = useState(null)
   const [isHovering, setIsHovering] = useState(false)
-  
+
   useEffect(() => {
+    if (!isHovering) return undefined
+
     let iteration = 0
-    let interval = null
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!<>-_\\\\/[]{}—=+*^?#________'
-    
-    const scramble = () => {
-      interval = setInterval(() => {
-        setDisplayText((_) => {
-          return text
-            .split('')
-            .map((char, index) => {
-              if (index < iteration) return text[index]
-              return chars[Math.floor(Math.random() * chars.length)]
-            })
-            .join('')
-        })
 
-        if (iteration >= text.length) clearInterval(interval)
-        iteration += 1 / 3
-      }, 30)
-    }
+    const interval = setInterval(() => {
+      setScrambledText(
+        text
+          .split('')
+          .map((char, index) => {
+            if (index < iteration) return text[index]
+            return chars[Math.floor(Math.random() * chars.length)]
+          })
+          .join('')
+      )
 
-    if (isHovering) {
-      scramble()
-    } else {
-      setDisplayText(text)
-    }
+      if (iteration >= text.length) clearInterval(interval)
+      iteration += 1 / 3
+    }, 30)
 
     return () => clearInterval(interval)
   }, [text, isHovering])
 
+  const displayText = isHovering && scrambledText ? scrambledText : text
+
   return (
-    <span 
-      onMouseEnter={() => setIsHovering(true)} 
+    <span
+      onMouseEnter={() => {
+        setScrambledText(null)
+        setIsHovering(true)
+      }}
       onMouseLeave={() => setIsHovering(false)}
       style={{ cursor: 'crosshair', display: 'inline-block' }}
     >
@@ -439,11 +454,11 @@ const projectsData = {
       ],
       caseStudy: {
         problem:
-          'Bridge the gap between face recognition outputs and crime-intelligence analytics in a single workflow.',
+          'Conectarea rezultatelor recunoașterii faciale cu analiza de inteligență criminalistică într-un singur flux de lucru.',
         solution:
-          'Built a modular stack with YOLOv8 detection, 3D reconstruction, embeddings, and a FastAPI + React dashboard.',
+          'Am construit un stack modular cu detectare YOLOv8, reconstrucție 3D, embeddings și un dashboard FastAPI + React.',
         impact:
-          'Demonstrated feasibility of a unified research-only prototype with governance and fairness checks.',
+          'Am demonstrat fezabilitatea unui prototip unificat, exclusiv pentru cercetare, cu verificări de guvernanță și echitate.',
         stack: ['PyTorch', 'YOLOv8', 'FastAPI', 'React', 'Prophet'],
       },
     },
@@ -570,21 +585,6 @@ const projectsData = {
   ],
 }
 
-const certificationsData = {
-  en: [
-    { title: 'Machine Learning Specialization', issuer: 'Stanford Online', year: '2024', credential: 'Coursera' },
-    { title: 'Deep Learning Specialization', issuer: 'DeepLearning.AI', year: '2024', credential: 'Coursera' },
-    { title: 'Google Data Analytics Professional Certificate', issuer: 'Google', year: '2023', credential: 'Coursera' },
-    { title: 'TensorFlow Developer Certificate', issuer: 'Google', year: '2024', credential: 'TensorFlow' },
-  ],
-  ro: [
-    { title: 'Specializare Machine Learning', issuer: 'Stanford Online', year: '2024', credential: 'Coursera' },
-    { title: 'Specializare Deep Learning', issuer: 'DeepLearning.AI', year: '2024', credential: 'Coursera' },
-    { title: 'Certificat Profesional Google Data Analytics', issuer: 'Google', year: '2023', credential: 'Coursera' },
-    { title: 'Certificat Dezvoltator TensorFlow', issuer: 'Google', year: '2024', credential: 'TensorFlow' },
-  ],
-}
-
 const translations = {
   en: {
     about: 'About',
@@ -640,13 +640,12 @@ const translations = {
     email: 'Email',
     github: 'GitHub',
     linkedin: 'LinkedIn',
-    certifications: 'Certifications',
-    certificationsSubtitle: 'Professional certifications and continuous learning.',
     name: 'Name',
     message: 'Message',
     sendMessage: 'Send message',
     sending: 'Sending...',
     sent: 'Sent!',
+    sendError: 'Something went wrong. Please try again or email me directly.',
     darkMode: 'Dark mode',
     lightMode: 'Light mode',
     heroEyebrow: 'MSc Data Science and Artificial Intelligence',
@@ -710,13 +709,12 @@ const translations = {
     email: 'Email',
     github: 'GitHub',
     linkedin: 'LinkedIn',
-    certifications: 'Certificări',
-    certificationsSubtitle: 'Certificări profesionale și învățare continuă.',
     name: 'Nume',
     message: 'Mesaj',
     sendMessage: 'Trimite mesaj',
     sending: 'Se trimite...',
     sent: 'Trimis!',
+    sendError: 'Ceva n-a mers. Încearcă din nou sau scrie-mi direct pe email.',
     darkMode: 'Mod întunecat',
     lightMode: 'Mod luminos',
     heroEyebrow: 'MSc Știința Datelor și Inteligența Artificială',
@@ -738,13 +736,13 @@ function App() {
   const [lang, setLang] = useState('en')
   const [reducedFx, setReducedFx] = useState(() => {
     if (typeof window === 'undefined') return false
-    return window.localStorage.getItem('portfolio-fx-mode') === 'stealth'
+    return readStorage('portfolio-fx-mode') === 'stealth'
   })
   const [recruiterMode, setRecruiterMode] = useState(() => {
     if (typeof window === 'undefined') return false
-    return window.localStorage.getItem('portfolio-recruiter-mode') === 'true'
+    return readStorage('portfolio-recruiter-mode') === 'true'
   })
-  const [booting, setBooting] = useState(() => !reducedFx && !recruiterMode)
+  const [bootDone, setBootDone] = useState(false)
   const [commandOpen, setCommandOpen] = useState(false)
   const [commandQuery, setCommandQuery] = useState('')
   const [projectQuery, setProjectQuery] = useState('')
@@ -752,28 +750,25 @@ function App() {
   const t = translations[lang]
   const cvHref = `${import.meta.env.BASE_URL}Cristian-Paraschiv-CV.html`
   const cleanView = reducedFx || recruiterMode
+  const booting = !bootDone && !cleanView
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
   useEffect(() => {
-    if (cleanView) {
-      setBooting(false)
-      return undefined
-    }
-
     const timer = setTimeout(() => {
-      setBooting(false)
+      setBootDone(true)
     }, 2800)
     return () => clearTimeout(timer)
-  }, [cleanView])
+  }, [])
 
   useEffect(() => {
-    window.localStorage.setItem(
-      'portfolio-fx-mode',
-      reducedFx ? 'stealth' : 'full'
-    )
+    writeStorage('portfolio-fx-mode', reducedFx ? 'stealth' : 'full')
     document.documentElement.classList.toggle('reduced-fx', reducedFx)
     if (reducedFx) {
       document.documentElement.classList.remove('cursor-interactive')
@@ -781,10 +776,7 @@ function App() {
   }, [reducedFx])
 
   useEffect(() => {
-    window.localStorage.setItem(
-      'portfolio-recruiter-mode',
-      recruiterMode ? 'true' : 'false'
-    )
+    writeStorage('portfolio-recruiter-mode', recruiterMode ? 'true' : 'false')
     document.documentElement.classList.toggle('recruiter-mode', recruiterMode)
     if (recruiterMode) {
       document.documentElement.classList.remove('cursor-interactive')
@@ -800,6 +792,7 @@ function App() {
 
       if (event.key === 'Escape') {
         setCommandOpen(false)
+        setSelectedProject(null)
         return
       }
 
@@ -842,7 +835,7 @@ function App() {
       } else {
         setFormStatus('error')
       }
-    } catch (error) {
+    } catch {
       setFormStatus('error')
     }
   }
@@ -850,7 +843,6 @@ function App() {
   const filters = ['All', 'ML', 'Data', 'Apps', 'Web', 'Visualization']
 
   const projectsLang = projectsData[lang]
-  const certifications = certificationsData[lang]
 
   const filteredProjects = useMemo(() => {
     const query = projectQuery.trim().toLowerCase()
@@ -932,58 +924,6 @@ function App() {
     }, 4000)
     return () => clearInterval(interval)
   }, [projectsLang.length])
-
-  useEffect(() => {
-    const scrollElements = document.querySelectorAll('.scroll-fade')
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('visible')
-        })
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    )
-    scrollElements.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
-
-  const skillMatrix = [
-    {
-      title: 'Core',
-      skills: [
-        'Python',
-        'Scikit-learn',
-        'Pandas',
-        'SQL',
-        'Model Evaluation',
-        'Explainability (SHAP, LIME)',
-      ],
-    },
-    {
-      title: 'Advanced',
-      skills: [
-        'TensorFlow',
-        'PyTorch',
-        'Keras',
-        'Feature Engineering',
-        'Imbalanced Learning',
-        'Time-Series Forecasting',
-        'Object Detection (YOLO)',
-      ],
-    },
-    {
-      title: 'Familiar',
-      skills: [
-        'Power BI',
-        'Streamlit',
-        'React',
-        'FastAPI',
-        'PHP',
-        'Docker',
-        'GitHub Actions',
-      ],
-    },
-  ]
 
   const navigateTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -1420,24 +1360,6 @@ function App() {
           </div>
         </section>
 
-        {/* <section id="certifications" className="section certifications">
-          <div className="section-head">
-            <h2><ScrambleText text={t.certifications} /></h2>
-            <p>{t.certificationsSubtitle}</p>
-          </div>
-          <div className="certifications-grid">
-            {certifications.map((cert, index) => (
-              <div key={index} className="certification-card">
-                <h3>{cert.title}</h3>
-                <p className="cert-issuer">{cert.issuer}</p>
-                <div className="cert-meta">
-                  <span>{cert.year}</span>
-                  <span>{cert.credential}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section> */}
 
         <section id="projects" className="section projects">
           <div className="section-head">
@@ -1523,7 +1445,7 @@ function App() {
                   ))}
                 </div>
                 <div className="project-actions">
-                  <a href={project.link} className="project-link">
+                  <a href={project.link} className="project-link" target="_blank" rel="noreferrer">
                     {project.linkLabel}
                   </a>
                   <button
@@ -1548,7 +1470,15 @@ function App() {
           </div>
         </section>
         {selectedProject ? (
-          <div className="modal" role="dialog" aria-modal="true">
+          <div
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedProject.title}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setSelectedProject(null)
+            }}
+          >
             <div className="modal-card">
               <div className="modal-header">
                 <h3>{selectedProject.title}</h3>
@@ -1669,6 +1599,9 @@ function App() {
               <button type="submit" className="btn primary" disabled={formStatus === 'sending'}>
                 {formStatus === 'sending' ? t.sending : formStatus === 'sent' ? t.sent : t.sendMessage}
               </button>
+              {formStatus === 'error' ? (
+                <p className="form-error" role="alert">{t.sendError}</p>
+              ) : null}
             </form>
             <div className="contact-card">
               <div>

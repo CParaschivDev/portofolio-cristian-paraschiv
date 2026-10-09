@@ -2538,3 +2538,9 @@
     flex-wrap: wrap;
   }
 }
+
+.form-error {
+  margin: 0;
+  color: #ff4d6d;
+  font-size: 0.9rem;
+}
