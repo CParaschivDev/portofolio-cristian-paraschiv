@@ -1070,18 +1070,35 @@ function App() {
 
   useEffect(() => {
     const sections = ['about', 'experience', 'education', 'projects', 'skills', 'contact']
-    const observers = []
-    sections.forEach((id) => {
-      const el = document.getElementById(id)
-      if (!el) return
-      const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveSection(id) },
-        { rootMargin: '-30% 0px -55% 0px', threshold: 0.15 }
-      )
-      observer.observe(el)
-      observers.push(observer)
-    })
-    return () => observers.forEach((o) => o.disconnect())
+    let frameId = null
+
+    // The active section is the last one whose top has passed 35% of the viewport;
+    // at the very bottom of the page it is the last section.
+    const updateActive = () => {
+      frameId = null
+      const atBottom =
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2
+      const marker = window.innerHeight * 0.35
+      const current = atBottom
+        ? sections[sections.length - 1]
+        : sections.filter((id) => {
+            const el = document.getElementById(id)
+            return el && el.getBoundingClientRect().top <= marker
+          }).pop()
+      setActiveSection(current ?? sections[0])
+    }
+
+    const onScroll = () => {
+      if (frameId === null) frameId = requestAnimationFrame(updateActive)
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frameId !== null) cancelAnimationFrame(frameId)
+    }
   }, [])
 
   useEffect(() => {
