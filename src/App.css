@@ -29,7 +29,7 @@
   pointer-events: none;
   background:
     linear-gradient(90deg, transparent 0 48%, rgba(255, 0, 60, 0.18) 49%, transparent 50%),
-    linear-gradient(0deg, transparent 0 52%, rgba(0, 243, 255, 0.14) 53%, transparent 54%);
+    linear-gradient(0deg, transparent 0 52%, rgb(var(--accent-rgb) / 0.14) 53%, transparent 54%);
   mix-blend-mode: screen;
   opacity: 0;
   transform: translate3d(0, 0, 0);
@@ -176,7 +176,7 @@
   height: 36px;
   padding: 0 0.9rem;
   border: 1px solid var(--line-strong);
-  background: rgba(0, 243, 255, 0.06);
+  background: rgb(var(--accent-rgb) / 0.06);
   color: var(--accent);
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -225,7 +225,7 @@
   justify-content: center;
   padding: 0 0.85rem;
   border: 1px solid var(--line-strong);
-  background: rgba(0, 243, 255, 0.06);
+  background: rgb(var(--accent-rgb) / 0.06);
   color: var(--accent);
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -408,7 +408,6 @@
 
 /* Apply panels to cards */
 .hero-card, .about-card, .education-card, .skills-card, .project-card, .contact-card {
-  @extend .sci-fi-panel;
   background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 90%, transparent), color-mix(in srgb, var(--surface) 40%, transparent));
   border: 1px solid var(--line);
   position: relative;
@@ -564,8 +563,8 @@
   padding: 1.25rem;
   border: 1px solid var(--line-strong);
   background:
-    linear-gradient(135deg, rgba(0, 243, 255, 0.09), transparent 45%),
-    rgba(0, 0, 0, 0.36);
+    linear-gradient(135deg, rgb(var(--accent-rgb) / 0.09), transparent 45%),
+    rgb(var(--panel-rgb) / 0.36);
   clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
 }
 
@@ -599,7 +598,7 @@
 .recruiter-points span {
   padding: 0.38rem 0.72rem;
   border: 1px solid var(--line);
-  background: rgba(0, 243, 255, 0.045);
+  background: rgb(var(--accent-rgb) / 0.045);
   color: var(--accent);
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -638,12 +637,12 @@
   margin: 1.5rem auto 1.7rem;
   border: 1px solid var(--line);
   background:
-    radial-gradient(circle at center, rgba(0, 243, 255, 0.18), transparent 18%),
-    radial-gradient(circle at center, rgba(0, 243, 255, 0.07), transparent 42%),
-    repeating-linear-gradient(90deg, transparent 0 12px, rgba(0, 243, 255, 0.08) 13px 14px);
+    radial-gradient(circle at center, rgb(var(--accent-rgb) / 0.18), transparent 18%),
+    radial-gradient(circle at center, rgb(var(--accent-rgb) / 0.07), transparent 42%),
+    repeating-linear-gradient(90deg, transparent 0 12px, rgb(var(--accent-rgb) / 0.08) 13px 14px);
   clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
   overflow: hidden;
-  box-shadow: inset 0 0 38px rgba(0, 243, 255, 0.12), 0 0 24px rgba(0, 243, 255, 0.14);
+  box-shadow: inset 0 0 38px rgb(var(--accent-rgb) / 0.12), 0 0 24px rgb(var(--accent-rgb) / 0.14);
 }
 
 .neural-core::before,
@@ -651,7 +650,7 @@
   content: '';
   position: absolute;
   inset: 18%;
-  border: 1px dashed rgba(0, 243, 255, 0.34);
+  border: 1px dashed rgb(var(--accent-rgb) / 0.34);
   border-radius: 50%;
 }
 
@@ -669,16 +668,16 @@
 .neural-scan {
   position: absolute;
   inset: -35%;
-  background: conic-gradient(from 0deg, transparent 0 76%, rgba(0, 243, 255, 0.42), transparent 88% 100%);
+  background: conic-gradient(from 0deg, transparent 0 76%, rgb(var(--accent-rgb) / 0.42), transparent 88% 100%);
   mix-blend-mode: screen;
   animation: neural-sweep 5.5s linear infinite;
 }
 
 .neural-ring {
   position: absolute;
-  border: 1px solid rgba(0, 243, 255, 0.45);
+  border: 1px solid rgb(var(--accent-rgb) / 0.45);
   border-radius: 50%;
-  box-shadow: 0 0 18px rgba(0, 243, 255, 0.1);
+  box-shadow: 0 0 18px rgb(var(--accent-rgb) / 0.1);
 }
 
 .neural-ring-a {
@@ -705,9 +704,9 @@
   width: 58px;
   height: 58px;
   border: 1px solid var(--accent);
-  background: radial-gradient(circle, var(--accent) 0 12%, rgba(0, 243, 255, 0.22) 13% 45%, transparent 46%);
+  background: radial-gradient(circle, var(--accent) 0 12%, rgb(var(--accent-rgb) / 0.22) 13% 45%, transparent 46%);
   clip-path: polygon(50% 0, 62% 34%, 100% 50%, 62% 66%, 50% 100%, 38% 66%, 0 50%, 38% 34%);
-  box-shadow: 0 0 20px var(--accent-glow), inset 0 0 18px rgba(0, 243, 255, 0.45);
+  box-shadow: 0 0 20px var(--accent-glow), inset 0 0 18px rgb(var(--accent-rgb) / 0.45);
   animation: neural-heartbeat 1.8s ease-in-out infinite;
   z-index: 2;
 }
@@ -734,7 +733,7 @@
   transform: translateX(-50%);
   padding: 0.28rem 0.55rem;
   border: 1px solid var(--line-strong);
-  background: rgba(0, 0, 0, 0.58);
+  background: rgb(var(--panel-rgb) / 0.58);
   color: var(--accent);
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -801,7 +800,7 @@
 .project-tags span,
 .skill-chip {
   padding: 0.35rem 0.75rem;
-  background: rgba(0, 243, 255, 0.05);
+  background: rgb(var(--accent-rgb) / 0.05);
   border: 1px solid var(--line-strong);
   font-size: 0.75rem;
   font-weight: 600;
@@ -892,7 +891,7 @@
   gap: 0.4rem;
   padding: 0.6rem 1.2rem;
   border: 1px solid var(--accent);
-  background: rgba(0, 243, 255, 0.05);
+  background: rgb(var(--accent-rgb) / 0.05);
   font-family: var(--font-mono);
   color: var(--accent);
   text-transform: uppercase;
@@ -915,7 +914,6 @@
 }
 
 .project-cta {
-  @extend .btn.primary;
   padding: 0.6rem 1.2rem;
   clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
 }
@@ -976,8 +974,8 @@
   overflow: hidden;
   border: 1px solid var(--line);
   background:
-    linear-gradient(135deg, rgba(0, 243, 255, 0.08), transparent 42%),
-    rgba(0, 0, 0, 0.34);
+    linear-gradient(135deg, rgb(var(--accent-rgb) / 0.08), transparent 42%),
+    rgb(var(--panel-rgb) / 0.34);
   clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
   transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s;
 }
@@ -989,7 +987,7 @@
   background: repeating-linear-gradient(
     to bottom,
     transparent 0 9px,
-    rgba(0, 243, 255, 0.08) 10px 11px
+    rgb(var(--accent-rgb) / 0.08) 10px 11px
   );
   opacity: 0.4;
   pointer-events: none;
@@ -1010,7 +1008,7 @@
 
 .project-telemetry-card:hover {
   border-color: var(--accent);
-  box-shadow: inset 0 0 18px rgba(0, 243, 255, 0.08), 0 0 18px rgba(0, 243, 255, 0.14);
+  box-shadow: inset 0 0 18px rgb(var(--accent-rgb) / 0.08), 0 0 18px rgb(var(--accent-rgb) / 0.14);
   transform: translateY(-3px);
 }
 
@@ -1060,7 +1058,7 @@
 .scanner-input-wrap,
 .scanner-status {
   border: 1px solid var(--line);
-  background: rgba(0, 0, 0, 0.36);
+  background: rgb(var(--panel-rgb) / 0.36);
   clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
 }
 
@@ -1070,7 +1068,7 @@
   gap: 0.8rem;
   min-height: 54px;
   padding: 0.55rem 0.75rem 0.55rem 1rem;
-  box-shadow: inset 0 0 18px rgba(0, 243, 255, 0.05);
+  box-shadow: inset 0 0 18px rgb(var(--accent-rgb) / 0.05);
 }
 
 .scanner-prompt,
@@ -1105,7 +1103,7 @@
 }
 
 .scanner-input:focus {
-  text-shadow: 0 0 8px rgba(0, 243, 255, 0.24);
+  text-shadow: 0 0 8px rgb(var(--accent-rgb) / 0.24);
 }
 
 .scanner-clear {
@@ -1199,7 +1197,7 @@
 
 .filter-chip:hover {
   color: var(--accent);
-  background: rgba(0, 243, 255, 0.1);
+  background: rgb(var(--accent-rgb) / 0.1);
 }
 
 .filter-chip.active {
@@ -1221,7 +1219,7 @@
 .matrix-card {
   padding: 1rem;
   border: 1px solid var(--line);
-  background: rgba(0,0,0,0.4);
+  background: rgb(var(--panel-rgb) / 0.4);
 }
 
 .matrix-title {
@@ -1391,7 +1389,7 @@
 
 .modal-tags span {
   padding: 0.4rem 0.8rem;
-  background: rgba(0, 243, 255, 0.1);
+  background: rgb(var(--accent-rgb) / 0.1);
   border: 1px solid var(--line);
   font-family: var(--font-mono);
   font-size: 0.8rem;
@@ -1434,7 +1432,7 @@
 .form-group textarea {
   padding: 1rem;
   border: 1px solid var(--line-strong);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(var(--panel-rgb) / 0.5);
   color: var(--text);
   font-family: var(--font-mono);
   font-size: 1rem;
@@ -1446,8 +1444,8 @@
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-  background: rgba(0, 243, 255, 0.05);
+  box-shadow: 0 0 15px rgb(var(--accent-rgb) / 0.2);
+  background: rgb(var(--accent-rgb) / 0.05);
 }
 
 .contact-form .btn:disabled {
@@ -1556,7 +1554,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgb(var(--panel-rgb) / 0.4);
   padding: 15px;
   border: 1px solid var(--line);
   clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
@@ -1606,12 +1604,12 @@
   padding: 1rem 0.9rem;
   color: var(--accent);
   font-family: var(--font-mono);
-  background: rgba(0, 0, 0, 0.42);
+  background: rgb(var(--panel-rgb) / 0.42);
   border: 1px solid var(--line);
   backdrop-filter: blur(6px);
   clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
   transform: translateY(-50%);
-  box-shadow: inset 0 0 18px rgba(0, 243, 255, 0.08), 0 0 22px rgba(0, 243, 255, 0.12);
+  box-shadow: inset 0 0 18px rgb(var(--accent-rgb) / 0.08), 0 0 22px rgb(var(--accent-rgb) / 0.12);
   animation: fade-up 1s ease 3.1s both;
 }
 
@@ -1629,7 +1627,7 @@
   justify-self: center;
   width: 2px;
   height: 230px;
-  background: rgba(0, 243, 255, 0.16);
+  background: rgb(var(--accent-rgb) / 0.16);
   overflow: hidden;
 }
 
@@ -1647,7 +1645,7 @@
   background: repeating-linear-gradient(
     to bottom,
     transparent 0 13px,
-    rgba(0, 243, 255, 0.38) 14px 16px
+    rgb(var(--accent-rgb) / 0.38) 14px 16px
   );
 }
 
@@ -1687,7 +1685,7 @@
   width: 8px;
   height: 8px;
   border: 1px solid currentColor;
-  background: rgba(0, 243, 255, 0.08);
+  background: rgb(var(--accent-rgb) / 0.08);
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
   transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
 }
@@ -1755,7 +1753,7 @@
 .skill-bar-track {
   width: 100%;
   height: 6px;
-  background: rgba(0, 243, 255, 0.1);
+  background: rgb(var(--accent-rgb) / 0.1);
   border: 1px solid var(--line);
   position: relative;
   clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
@@ -1785,7 +1783,7 @@
   place-items: start center;
   padding: clamp(5rem, 12vh, 8rem) 1.2rem 1.2rem;
   background:
-    radial-gradient(circle at 50% 18%, rgba(0, 243, 255, 0.16), transparent 30%),
+    radial-gradient(circle at 50% 18%, rgb(var(--accent-rgb) / 0.16), transparent 30%),
     rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(14px);
   animation: command-overlay-in 0.18s ease both;
@@ -1799,7 +1797,7 @@
   background:
     linear-gradient(135deg, rgba(0, 12, 24, 0.96), rgba(0, 2, 8, 0.88)),
     var(--surface);
-  box-shadow: 0 0 48px rgba(0, 243, 255, 0.28), inset 0 0 28px rgba(0, 243, 255, 0.08);
+  box-shadow: 0 0 48px rgb(var(--accent-rgb) / 0.28), inset 0 0 28px rgb(var(--accent-rgb) / 0.08);
   clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px);
   animation: command-panel-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -1835,7 +1833,7 @@
   margin: 1rem;
   padding: 1rem;
   border: 1px solid var(--line-strong);
-  background: rgba(0, 243, 255, 0.05);
+  background: rgb(var(--accent-rgb) / 0.05);
   clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
 }
 
@@ -1888,8 +1886,8 @@
 .command-item:hover,
 .command-item:focus-visible {
   border-color: var(--accent);
-  background: rgba(0, 243, 255, 0.1);
-  box-shadow: inset 0 0 18px rgba(0, 243, 255, 0.1), 0 0 18px rgba(0, 243, 255, 0.12);
+  background: rgb(var(--accent-rgb) / 0.1);
+  box-shadow: inset 0 0 18px rgb(var(--accent-rgb) / 0.1), 0 0 18px rgb(var(--accent-rgb) / 0.12);
   transform: translateX(4px);
   outline: none;
 }
@@ -1990,7 +1988,7 @@
     height: 36px;
     border: 1px solid var(--accent);
     opacity: 0.72;
-    box-shadow: inset 0 0 12px rgba(0, 243, 255, 0.18), 0 0 14px var(--accent-glow);
+    box-shadow: inset 0 0 12px rgb(var(--accent-rgb) / 0.18), 0 0 14px var(--accent-glow);
     clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
     transition: width 0.18s ease, height 0.18s ease, opacity 0.18s ease, background 0.18s ease;
   }
@@ -1998,7 +1996,7 @@
   :root.cursor-interactive .cursor-ring {
     width: 58px;
     height: 58px;
-    background: rgba(0, 243, 255, 0.06);
+    background: rgb(var(--accent-rgb) / 0.06);
     opacity: 1;
   }
 
@@ -2089,7 +2087,7 @@
     flex: 0 0 auto;
     padding: 0.45rem 0.65rem;
     border: 1px solid var(--line);
-    background: rgba(0, 243, 255, 0.045);
+    background: rgb(var(--accent-rgb) / 0.045);
     font-size: 0.68rem;
     scroll-snap-align: start;
     clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
@@ -2495,7 +2493,7 @@
   .hero-stats > div {
     padding: 0.7rem;
     border: 1px solid var(--line);
-    background: rgba(0, 243, 255, 0.04);
+    background: rgb(var(--accent-rgb) / 0.04);
   }
 
   .recruiter-panel h2 {
@@ -2600,7 +2598,7 @@
   aspect-ratio: 16 / 9;
   object-fit: cover;
   border: 1px solid var(--line);
-  background: rgba(0, 243, 255, 0.05);
+  background: rgb(var(--accent-rgb) / 0.05);
   clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
 }
 
@@ -2626,7 +2624,7 @@
     width: 44px;
     height: 44px;
     border: 1px solid var(--line-strong);
-    background: rgba(0, 243, 255, 0.06);
+    background: rgb(var(--accent-rgb) / 0.06);
     color: var(--accent);
     font-size: 1.2rem;
     clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
@@ -2686,4 +2684,32 @@
     flex-wrap: wrap;
     justify-content: center;
   }
+}
+
+/* Keyboard focus: drawn inside the box so clip-path corners don't hide it */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+main:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10001;
+  padding: 0.6rem 1rem;
+  background: var(--accent);
+  color: var(--dark);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
 }

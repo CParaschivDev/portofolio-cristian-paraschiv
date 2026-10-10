@@ -36,6 +36,52 @@ const getProjectThumbnail = (link) => {
   return null
 }
 
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+// Keeps keyboard focus inside a dialog while it is open and restores it on close.
+const useFocusTrap = (active, initialFocusSelector) => {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const container = ref.current
+    if (!active || !container) return undefined
+
+    const previouslyFocused = document.activeElement
+    const getItems = () => [...container.querySelectorAll(FOCUSABLE)]
+    const initial =
+      (initialFocusSelector && container.querySelector(initialFocusSelector)) || getItems()[0]
+    initial?.focus()
+
+    const onKeyDown = (event) => {
+      if (event.key !== 'Tab') return
+      const items = getItems()
+      if (!items.length) return
+      const first = items[0]
+      const last = items[items.length - 1]
+
+      if (!container.contains(document.activeElement)) {
+        event.preventDefault()
+        first.focus()
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus()
+    }
+  }, [active, initialFocusSelector])
+
+  return ref
+}
+
 const MatrixBackground = ({ darkMode }) => {
   const canvasRef = useRef(null)
 
@@ -647,9 +693,9 @@ const translations = {
     focus: 'Focus',
     timezone: 'Timezone',
     eet: 'EET',
-    appliedML: 'applied ML projects',
-    degrees: 'degrees in tech',
-    explainabilityFocus: 'explainability focus',
+    appliedML: 'data & AI projects',
+    degrees: 'degrees · First Class & Distinction',
+    explainabilityFocus: 'best ROC-AUC (bank marketing)',
     recentProject: 'Recent project',
     aboutTitle: 'About me',
     aboutText: 'I specialize in explainable ML, predictive modeling, and decision support dashboards. My focus is accuracy, clarity, and practical impact for stakeholders.',
@@ -699,6 +745,7 @@ const translations = {
     tierAdvanced: 'PROJECT-PROVEN',
     tierFamiliar: 'WORKING KNOWLEDGE',
     openMenu: 'Open menu',
+    skipToContent: 'Skip to content',
     closeMenu: 'Close menu',
     machineLearning: 'Machine Learning',
     dataAnalytics: 'Data & Analytics',
@@ -739,9 +786,9 @@ const translations = {
     focus: 'Focus',
     timezone: 'Fus orar',
     eet: 'EET',
-    appliedML: 'proiecte ML aplicate',
-    degrees: 'diplome în tech',
-    explainabilityFocus: 'focus pe explicabilitate',
+    appliedML: 'proiecte de date și AI',
+    degrees: 'diplome · First Class și Distinction',
+    explainabilityFocus: 'cel mai bun ROC-AUC (marketing bancar)',
     recentProject: 'Proiect recent',
     aboutTitle: 'Despre mine',
     aboutText: 'Specializez în ML explicabil, modelare predictivă și tablouri de bord pentru decizii. Focusul meu este acuratețea, claritatea și impactul practic pentru părți interesate.',
@@ -791,6 +838,7 @@ const translations = {
     tierAdvanced: 'DOVEDIT ÎN PROIECTE',
     tierFamiliar: 'CUNOȘTINȚE DE LUCRU',
     openMenu: 'Deschide meniul',
+    skipToContent: 'Sari la conținut',
     closeMenu: 'Închide meniul',
     machineLearning: 'Machine Learning',
     dataAnalytics: 'Date & Analiză',
@@ -839,11 +887,14 @@ function App() {
     () => readStorage('portfolio-booted') === 'true' || prefersReducedMotion()
   )
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuToggleRef = useRef(null)
   const [commandOpen, setCommandOpen] = useState(false)
   const [commandQuery, setCommandQuery] = useState('')
   const [projectQuery, setProjectQuery] = useState('')
 
   const t = translations[lang]
+  const modalRef = useFocusTrap(Boolean(selectedProject))
+  const commandPanelRef = useFocusTrap(commandOpen, '.command-input')
   const cvHref = `${import.meta.env.BASE_URL}Cristian-Paraschiv-CV.pdf`
   const cleanView = reducedFx || recruiterMode
   const booting = !bootDone && !cleanView
@@ -896,6 +947,10 @@ function App() {
         event.target?.isContentEditable
 
       if (event.key === 'Escape') {
+        const toggle = menuToggleRef.current
+        if (toggle?.offsetParent && toggle.closest('.nav')?.contains(document.activeElement)) {
+          toggle.focus()
+        }
         setCommandOpen(false)
         setSelectedProject(null)
         setMenuOpen(false)
@@ -1197,7 +1252,7 @@ function App() {
               if (event.target === event.currentTarget) setCommandOpen(false)
             }}
           >
-            <div className="command-panel">
+            <div className="command-panel" ref={commandPanelRef}>
               <div className="command-panel-head">
                 <span>COMMAND PALETTE</span>
                 <button
@@ -1211,7 +1266,6 @@ function App() {
               <div className="command-input-wrap">
                 <span className="command-prompt">/</span>
                 <input
-                  autoFocus
                   className="command-input"
                   value={commandQuery}
                   onChange={(event) => setCommandQuery(event.target.value)}
@@ -1245,10 +1299,12 @@ function App() {
             </div>
           </div>
         )}
+        <a className="skip-link" href="#main">{t.skipToContent}</a>
         <header className={`nav ${menuOpen ? 'nav-open' : ''}`}>
         <div className="brand">Cristian Paraschiv</div>
         <button
           type="button"
+          ref={menuToggleRef}
           className="menu-toggle"
           onClick={() => setMenuOpen((open) => !open)}
           aria-expanded={menuOpen}
@@ -1321,7 +1377,7 @@ function App() {
         </div>
       </header>
 
-      <main>
+      <main id="main" tabIndex={-1}>
         <section className="hero">
           <div className="hero-content">
             <p className="eyebrow">{t.heroEyebrow}</p>
@@ -1366,7 +1422,7 @@ function App() {
                 <span className="stat-label">{t.degrees}</span>
               </div>
               <div>
-                <span className="stat">100%</span>
+                <span className="stat">0.994</span>
                 <span className="stat-label">{t.explainabilityFocus}</span>
               </div>
             </div>
@@ -1594,7 +1650,7 @@ function App() {
                   </a>
                   <button
                     type="button"
-                    className="project-cta"
+                    className="btn primary project-cta"
                     onClick={() => setSelectedProject(project)}
                   >
                     {t.caseStudy}
@@ -1623,7 +1679,7 @@ function App() {
               if (event.target === event.currentTarget) setSelectedProject(null)
             }}
           >
-            <div className="modal-card">
+            <div className="modal-card" ref={modalRef}>
               <div className="modal-header">
                 <h3>{selectedProject.title}</h3>
                 <button

@@ -19,14 +19,16 @@
   --bg-2: #000408;
   --bg-3: #000a14;
   --bg-main: #000000;
+  --accent-rgb: 0 243 255;
+  --panel-rgb: 0 0 0;
 }
 
 [data-theme="light"] {
   /* Light mode for a robot means Amber/Warning HUD */
   --text: #050505;
-  --muted: #d95a00;
+  --muted: #9a3412;
   --dark: #fffdfa;
-  --accent: #ff6600;
+  --accent: #c2410c;
   --accent-glow: rgba(255, 102, 0, 0.5);
   --accent-alt: #ff0000;
   --surface: rgba(255, 245, 235, 0.85);
@@ -38,6 +40,8 @@
   --bg-2: #e0d0c0;
   --bg-3: #faeedd;
   --bg-main: #ffffff;
+  --accent-rgb: 255 102 0;
+  --panel-rgb: 255 247 237;
 }
 
 * {
