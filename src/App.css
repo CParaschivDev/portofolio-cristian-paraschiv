@@ -2739,3 +2739,18 @@ main:focus {
     padding-right: max(clamp(1.5rem, 4vw, 5rem), 96px);
   }
 }
+
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+/* Spam trap: kept out of view and out of the tab order */
+.form-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

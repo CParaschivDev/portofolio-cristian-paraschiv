@@ -736,6 +736,8 @@ const translations = {
     impact: 'Impact',
     stack: 'Stack',
     close: 'Close',
+    copyLink: 'Copy link',
+    linkCopied: 'Link copied',
     skillsTitle: 'Skills',
     skillsSubtitle: 'A focused stack that supports end-to-end ML delivery.',
     core: 'Core',
@@ -829,6 +831,8 @@ const translations = {
     impact: 'Impactul',
     stack: 'Tehnologii',
     close: 'Închide',
+    copyLink: 'Copiază linkul',
+    linkCopied: 'Link copiat',
     skillsTitle: 'Competențe',
     skillsSubtitle: 'Un stack concentrat care susține livrare ML end-to-end.',
     core: 'De bază',
@@ -866,13 +870,37 @@ const translations = {
   },
 }
 
+const slugify = (text) =>
+  text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+// Projects are linked by their English title so a link works in both languages.
+const projectSlugs = projectsData.en.map((project) => slugify(project.title))
+
+const getProjectSlugFromHash = () => {
+  if (typeof window === 'undefined') return null
+  const match = window.location.hash.match(/^#project=([\w-]+)$/)
+  return match && projectSlugs.includes(match[1]) ? match[1] : null
+}
+
+const getInitialDarkMode = () => {
+  const stored = readStorage('portfolio-theme')
+  if (stored === 'light' || stored === 'dark') return stored === 'dark'
+  return !window.matchMedia?.('(prefers-color-scheme: light)').matches
+}
+
 function App() {
   const [activeFilter, setActiveFilter] = useState('All')
-  const [selectedProject, setSelectedProject] = useState(null)
+  const [selectedSlug, setSelectedSlug] = useState(getProjectSlugFromHash)
+  const [linkCopied, setLinkCopied] = useState(false)
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
   const [formStatus, setFormStatus] = useState(null)
   const [activeSection, setActiveSection] = useState('about')
-  const [darkMode, setDarkMode] = useState(() => readStorage('portfolio-theme') !== 'light')
+  const [darkMode, setDarkMode] = useState(getInitialDarkMode)
   const [lang, setLang] = useState(getInitialLang)
   const [reducedFx, setReducedFx] = useState(() => {
     const stored = readStorage('portfolio-fx-mode')
@@ -884,7 +912,10 @@ function App() {
     return readStorage('portfolio-recruiter-mode') === 'true'
   })
   const [bootDone, setBootDone] = useState(
-    () => readStorage('portfolio-booted') === 'true' || prefersReducedMotion()
+    () =>
+      readStorage('portfolio-booted') === 'true' ||
+      prefersReducedMotion() ||
+      Boolean(getProjectSlugFromHash())
   )
   const [menuOpen, setMenuOpen] = useState(false)
   const menuToggleRef = useRef(null)
@@ -893,7 +924,7 @@ function App() {
   const [projectQuery, setProjectQuery] = useState('')
 
   const t = translations[lang]
-  const modalRef = useFocusTrap(Boolean(selectedProject))
+  const modalRef = useFocusTrap(Boolean(selectedSlug))
   const commandPanelRef = useFocusTrap(commandOpen, '.command-input')
   const cvHref = `${import.meta.env.BASE_URL}Cristian-Paraschiv-CV.pdf`
   const cleanView = reducedFx || recruiterMode
@@ -906,7 +937,6 @@ function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
-    writeStorage('portfolio-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
   useEffect(() => {
@@ -952,7 +982,10 @@ function App() {
           toggle.focus()
         }
         setCommandOpen(false)
-        setSelectedProject(null)
+        if (window.location.hash.startsWith('#project=')) {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search)
+        }
+        setSelectedSlug(null)
         setMenuOpen(false)
         return
       }
@@ -973,6 +1006,44 @@ function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
+  // Only an explicit choice is stored, so the OS theme keeps applying otherwise.
+  const toggleTheme = () => {
+    writeStorage('portfolio-theme', darkMode ? 'light' : 'dark')
+    setDarkMode(!darkMode)
+  }
+
+  const selectedIndex = selectedSlug ? projectSlugs.indexOf(selectedSlug) : -1
+  const selectedProject = selectedIndex >= 0 ? projectsData[lang][selectedIndex] : null
+
+  const openProject = (project) => {
+    const slug = projectSlugs[projectsData[lang].indexOf(project)]
+    window.history.replaceState(null, '', `#project=${slug}`)
+    setLinkCopied(false)
+    setSelectedSlug(slug)
+  }
+
+  const closeProject = () => {
+    if (window.location.hash.startsWith('#project=')) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+    }
+    setSelectedSlug(null)
+  }
+
+  const copyProjectLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setLinkCopied(true)
+    } catch {
+      setLinkCopied(false)
+    }
+  }
+
+  useEffect(() => {
+    const onHashChange = () => setSelectedSlug(getProjectSlugFromHash())
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
   const toggleFx = () => {
     writeStorage('portfolio-fx-mode', reducedFx ? 'full' : 'stealth')
     setReducedFx(!reducedFx)
@@ -982,6 +1053,13 @@ function App() {
     e.preventDefault()
     setFormStatus('sending')
     const form = e.target
+    // Hidden field only bots fill in: pretend success and send nothing.
+    if (form._gotcha.value) {
+      setFormStatus('sent')
+      form.reset()
+      setTimeout(() => setFormStatus(null), 3000)
+      return
+    }
     const data = {
       name: form.name.value,
       email: form.email.value,
@@ -1149,7 +1227,7 @@ function App() {
           ? 'Switch to cyan night ops'
           : 'Comuta pe operatiuni cyan',
       shortcut: 'T',
-      action: () => setDarkMode((mode) => !mode),
+      action: toggleTheme,
     },
     {
       code: 'SYS/LANGUAGE',
@@ -1377,7 +1455,7 @@ function App() {
           </a>
           <button 
             className="theme-toggle" 
-            onClick={() => setDarkMode(!darkMode)}
+            onClick={toggleTheme}
             aria-label={darkMode ? t.lightMode : t.darkMode}
           >
             {darkMode ? '☀️' : '🌙'}
@@ -1668,7 +1746,7 @@ function App() {
                   <button
                     type="button"
                     className="btn primary project-cta"
-                    onClick={() => setSelectedProject(project)}
+                    onClick={() => openProject(project)}
                   >
                     {t.caseStudy}
                   </button>
@@ -1693,7 +1771,7 @@ function App() {
             aria-modal="true"
             aria-label={selectedProject.title}
             onMouseDown={(event) => {
-              if (event.target === event.currentTarget) setSelectedProject(null)
+              if (event.target === event.currentTarget) closeProject()
             }}
           >
             <div className="modal-card" ref={modalRef}>
@@ -1702,7 +1780,7 @@ function App() {
                 <button
                   type="button"
                   className="modal-close"
-                  onClick={() => setSelectedProject(null)}
+                  onClick={closeProject}
                 >
                   {t.close}
                 </button>
@@ -1728,14 +1806,19 @@ function App() {
                     ))}
                   </div>
                 </div>
-                <a
-                  href={selectedProject.link}
-                  className="btn primary"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {selectedProject.linkLabel}
-                </a>
+                <div className="modal-actions">
+                  <a
+                    href={selectedProject.link}
+                    className="btn primary"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {selectedProject.linkLabel}
+                  </a>
+                  <button type="button" className="btn" onClick={copyProjectLink}>
+                    {linkCopied ? t.linkCopied : t.copyLink}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1805,6 +1888,10 @@ function App() {
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input type="email" id="email" name="email" required />
+              </div>
+              <div className="form-honeypot" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input type="text" id="website" name="_gotcha" tabIndex={-1} autoComplete="off" />
               </div>
               <div className="form-group">
                 <label htmlFor="message">{t.message}</label>

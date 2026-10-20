@@ -7,6 +7,17 @@
     <title>Cristian Paraschiv · MSc Data Science and Artificial Intelligence (DISTINCTION)</title>
     <meta name="description" content="Cristian Paraschiv – MSc Data Science and AI (Distinction). Explainable ML, predictive modeling, and analytics dashboards. Projects, CV, and contact." />
     <meta name="theme-color" content="#000000" />
+    <script>
+      // Apply the saved or system theme before first paint to avoid a dark/light flash.
+      try {
+        var saved = localStorage.getItem('portfolio-theme')
+        var light = saved ? saved === 'light' : window.matchMedia('(prefers-color-scheme: light)').matches
+        document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark')
+      } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" />
     <link rel="canonical" href="https://cparaschivdev.github.io/portofolio-cristian-paraschiv/" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://cparaschivdev.github.io/portofolio-cristian-paraschiv/" />
