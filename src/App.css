@@ -2754,3 +2754,20 @@ main:focus {
   height: 1px;
   overflow: hidden;
 }
+
+/* Land anchored sections below the sticky nav instead of underneath it */
+main section[id] {
+  scroll-margin-top: 120px;
+}
+
+@media (min-width: 761px) and (max-width: 1320px) {
+  main section[id] {
+    scroll-margin-top: 160px;
+  }
+}
+
+@media (max-width: 760px) {
+  main section[id] {
+    scroll-margin-top: 16px;
+  }
+}
