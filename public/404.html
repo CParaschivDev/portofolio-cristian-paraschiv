@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>404 · Cristian Paraschiv</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --accent: #00f3ff;
+        --text: #e0f2fe;
+        --muted: #00a8ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        background:
+          radial-gradient(circle at 70% 20%, rgba(0, 243, 255, 0.14), transparent 45%),
+          repeating-linear-gradient(0deg, rgba(0, 243, 255, 0.05) 0 1px, transparent 1px 32px),
+          repeating-linear-gradient(90deg, rgba(0, 243, 255, 0.05) 0 1px, transparent 1px 32px),
+          #00050a;
+        color: var(--text);
+        font-family: 'Share Tech Mono', monospace;
+      }
+
+      main {
+        max-width: 560px;
+        padding: 2.5rem 2rem;
+        border: 1px solid rgba(0, 243, 255, 0.35);
+        background: rgba(2, 6, 20, 0.75);
+        clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px);
+      }
+
+      .code {
+        margin: 0;
+        color: var(--accent);
+        letter-spacing: 0.2em;
+        font-size: 0.85rem;
+      }
+
+      h1 {
+        margin: 0.75rem 0 1rem;
+        font-family: 'Orbitron', sans-serif;
+        font-size: clamp(2.5rem, 12vw, 4.5rem);
+        text-shadow: 0 0 24px rgba(0, 243, 255, 0.55);
+      }
+
+      p {
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.8rem 1.4rem;
+        background: var(--accent);
+        color: #000;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+      }
+
+      a:focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: -4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">ERROR 404 // SIGNAL LOST</p>
+      <h1>404</h1>
+      <p>This page does not exist. The portfolio is one click away.</p>
+      <p>Pagina nu există. Portofoliul e la un click distanță.</p>
+      <a href="/portofolio-cristian-paraschiv/">Back to portfolio</a>
+    </main>
+  </body>
+</html>
