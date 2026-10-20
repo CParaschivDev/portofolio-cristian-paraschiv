@@ -926,7 +926,8 @@ function App() {
   const t = translations[lang]
   const modalRef = useFocusTrap(Boolean(selectedSlug))
   const commandPanelRef = useFocusTrap(commandOpen, '.command-input')
-  const cvHref = `${import.meta.env.BASE_URL}Cristian-Paraschiv-CV.pdf`
+  const cvFile = lang === 'ro' ? 'Cristian-Paraschiv-CV-RO.pdf' : 'Cristian-Paraschiv-CV.pdf'
+  const cvHref = `${import.meta.env.BASE_URL}${cvFile}`
   const cleanView = reducedFx || recruiterMode
   const booting = !bootDone && !cleanView
 
@@ -1450,7 +1451,7 @@ function App() {
           >
             {recruiterMode ? 'RECRUIT' : 'RECRUITER'}
           </button>
-          <a className="cv-link" href={cvHref} download="Cristian-Paraschiv-CV.pdf">
+          <a className="cv-link" href={cvHref} download={cvFile}>
             CV
           </a>
           <button 
@@ -1533,7 +1534,7 @@ function App() {
                   </p>
                 </div>
                 <div className="recruiter-actions">
-                  <a className="btn primary" href={cvHref} download="Cristian-Paraschiv-CV.pdf">
+                  <a className="btn primary" href={cvHref} download={cvFile}>
                     {lang === 'en' ? 'Download CV' : 'Descarca CV'}
                   </a>
                   <a className="btn ghost" href="mailto:paraschiv.cristian93@outlook.com">

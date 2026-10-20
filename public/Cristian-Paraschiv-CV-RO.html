@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cristian Paraschiv - CV (RO)</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #111827;
+        background: #ffffff;
+      }
+
+      body {
+        margin: 0;
+        padding: 40px;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 3px solid #111827;
+        padding-bottom: 18px;
+        margin-bottom: 28px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 34px;
+        letter-spacing: 0.02em;
+      }
+
+      h2 {
+        margin: 28px 0 10px;
+        font-size: 17px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #0f766e;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+
+      ul {
+        margin: 8px 0 0;
+        padding-left: 20px;
+      }
+
+      .meta {
+        margin-top: 8px;
+        color: #374151;
+        font-size: 14px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .role {
+        margin: 18px 0 0;
+        font-weight: 700;
+      }
+
+      .muted {
+        color: #4b5563;
+      }
+
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+
+      @media print {
+        body {
+          padding: 0;
+          line-height: 1.45;
+        }
+
+        header {
+          padding-bottom: 12px;
+          margin-bottom: 16px;
+        }
+
+        h1 {
+          font-size: 28px;
+        }
+
+        h2 {
+          margin: 16px 0 6px;
+          font-size: 14px;
+        }
+
+        p,
+        li {
+          font-size: 12.5px;
+        }
+
+        .meta {
+          font-size: 12px;
+        }
+
+        .grid {
+          gap: 4px 18px;
+        }
+
+        .grid p {
+          margin: 2px 0 6px;
+        }
+      }
+
+      @media (max-width: 700px) {
+        body {
+          padding: 22px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Cristian Paraschiv</h1>
+        <div class="role">MSc Știința Datelor și Inteligența Artificială (DISTINCȚIE)</div>
+        <div class="meta">
+          Email: paraschiv.cristian93@outlook.com | GitHub: github.com/CParaschivDev | LinkedIn: linkedin.com/in/cristian-constantin-paraschiv-6002b0257<br />
+          Portofoliu: cparaschivdev.github.io/portofolio-cristian-paraschiv
+        </div>
+      </header>
+
+      <section>
+        <h2>Profil</h2>
+        <p>
+          Absolvent de MSc în Știința Datelor și Inteligență Artificială (DISTINCȚIE), concentrat pe sisteme de machine learning fiabile, explicabilitate, dashboard-uri analitice și livrare practică de produs. Interes puternic pentru transformarea datelor brute în decizii clare prin fluxuri ML, interfețe vizuale și livrare documentată.
+        </p>
+      </section>
+
+      <section>
+        <h2>Experiență</h2>
+        <p><strong>Full-Stack Web Developer (voluntar)</strong> - 3Ks Judo Club</p>
+        <ul>
+          <li>Am construit și lansat site-ul oficial al clubului cap-coadă, de la înregistrarea domeniului, hosting cloud și DNS până la documentația de predare.</li>
+          <li>Am dezvoltat site-ul cu HTML5, CSS3, JavaScript și PHP, inclusiv hărți, informații despre grade și galerie media.</li>
+          <li>Am redus timpul de încărcare cu aproximativ 30% prin imagini WebP și lazy loading.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Educație</h2>
+        <ul>
+          <li><strong>MSc Știința Datelor și Inteligența Artificială</strong> - DISTINCȚIE</li>
+          <li><strong>BSc Cloud Computing</strong> - Prima Clasă (First Class)</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Competențe principale</h2>
+        <div class="grid">
+          <div>
+            <strong>Machine Learning</strong>
+            <p class="muted">Python, Scikit-learn, TensorFlow, PyTorch, Keras, evaluarea modelelor, feature engineering, date dezechilibrate, explicabilitate cu SHAP și LIME.</p>
+          </div>
+          <div>
+            <strong>Date și analiză</strong>
+            <p class="muted">Pandas, NumPy, SQL, Power BI, analiză exploratorie, curățarea datelor, design de dashboard-uri, prezentarea vizuală a datelor.</p>
+          </div>
+          <div>
+            <strong>Livrare de aplicații</strong>
+            <p class="muted">React, Vite, FastAPI, Streamlit, integrare API, Git, GitHub Actions, fluxuri de deployment.</p>
+          </div>
+          <div>
+            <strong>Produs și comunicare</strong>
+            <p class="muted">Arhitectura informației, layout responsive, redactare de studii de caz, recomandări orientate spre părțile interesate.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Proiecte selectate</h2>
+        <ul>
+          <li><strong>Recunoaștere facială 3D cu AI pentru inteligență criminalistică</strong> - Prototip de cercetare care combină reconstrucția 3D, embeddings, YOLOv8, FastAPI, React, prognoză și un strat de guvernanță.</li>
+          <li><strong>ML explicabil pentru campanii de marketing bancar</strong> - Aplicație Streamlit cu explicabilitate LIME/SHAP, comparație de modele, predicție batch și validare de schemă.</li>
+          <li><strong>Clasificarea bolilor frunzelor de plante</strong> - Experimente cu CNN rezidual și EfficientNetV2 pentru 22 de clase, cu class weighting și tuning Optuna.</li>
+          <li><strong>Prognoza profitului cu modele ensemble</strong> - Fluxuri Random Forest și Gradient Boosting cu metrici de evaluare și interpretare de business.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
