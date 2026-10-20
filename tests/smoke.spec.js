@@ -1,15 +1,23 @@
 import { test, expect } from '@playwright/test'
 
+// 1x1 transparent PNG.
+const THUMBNAIL_PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+  'base64',
+)
+
 // Skip the boot animation and keep effects predictable in every test.
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem('portfolio-booted', 'true')
     localStorage.setItem('portfolio-lang', 'en')
   })
-  // External thumbnails and fonts are not part of what we test.
-  await page.route(/^https:\/\/(i\.ytimg\.com|opengraph\.githubassets\.com|fonts\.)/, (route) =>
-    route.abort(),
+  // Serve a stand-in thumbnail so layout matches production without the network;
+  // fonts and analytics are not part of what we test.
+  await page.route(/^https:\/\/(i\.ytimg\.com|opengraph\.githubassets\.com)\//, (route) =>
+    route.fulfill({ contentType: 'image/png', body: THUMBNAIL_PNG }),
   )
+  await page.route(/^https:\/\/(fonts\.|gc\.zgo\.at)/, (route) => route.abort())
 })
 
 test('home page loads without errors and shows the MSc distinction', async ({ page }) => {
@@ -83,5 +91,47 @@ test('static files are published', async ({ request }) => {
   ]) {
     const response = await request.get(path)
     expect(response.status(), path).toBe(200)
+  }
+})
+
+test('analytics events fire for case studies, CV downloads and email clicks', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__events = []
+    window.goatcounter = { count: (event) => window.__events.push(event.path) }
+  })
+  await page.goto('./')
+
+  await page.locator('.project-cta').first().click()
+  await page.keyboard.press('Escape')
+  await page.locator('.cv-link').evaluate((link) => {
+    link.addEventListener('click', (event) => event.preventDefault(), { once: true })
+    link.click()
+  })
+  await page.locator('.nav-cta').evaluate((link) => {
+    link.addEventListener('click', (event) => event.preventDefault(), { once: true })
+    link.click()
+  })
+
+  const events = await page.evaluate(() => window.__events)
+  expect(events).toEqual(['case-study/3ks-judo-club-website', 'cv-download-en', 'email-click'])
+})
+
+test('nav links scroll each section into view below the sticky menu', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('./')
+
+  for (const id of ['about', 'experience', 'education', 'projects', 'skills']) {
+    await page.locator(`.nav-links a[href="#${id}"]`).click()
+    const heading = page.locator(`#${id} h2`).first()
+    await expect
+      .poll(async () => {
+        const [headingTop, navBottom] = await page.evaluate((sectionId) => [
+          document.querySelector(`#${sectionId} h2`).getBoundingClientRect().top,
+          document.querySelector('.nav').getBoundingClientRect().bottom,
+        ], id)
+        return headingTop >= navBottom && headingTop < 400
+      }, { message: `#${id} heading visible below the nav` })
+      .toBe(true)
+    await expect(heading).toBeInViewport()
   }
 })

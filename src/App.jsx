@@ -870,6 +870,12 @@ const translations = {
   },
 }
 
+// Sends a GoatCounter event when the analytics script is loaded; a no-op otherwise
+// (local development, tests, ad blockers).
+const trackEvent = (name) => {
+  window.goatcounter?.count?.({ path: name, title: name, event: true })
+}
+
 const slugify = (text) =>
   text
     .toLowerCase()
@@ -928,6 +934,7 @@ function App() {
   const commandPanelRef = useFocusTrap(commandOpen, '.command-input')
   const cvFile = lang === 'ro' ? 'Cristian-Paraschiv-CV-RO.pdf' : 'Cristian-Paraschiv-CV.pdf'
   const cvHref = `${import.meta.env.BASE_URL}${cvFile}`
+  const trackCvDownload = () => trackEvent(`cv-download-${lang}`)
   const cleanView = reducedFx || recruiterMode
   const booting = !bootDone && !cleanView
 
@@ -1019,6 +1026,7 @@ function App() {
   const openProject = (project) => {
     const slug = projectSlugs[projectsData[lang].indexOf(project)]
     window.history.replaceState(null, '', `#project=${slug}`)
+    trackEvent(`case-study/${slug}`)
     setLinkCopied(false)
     setSelectedSlug(slug)
   }
@@ -1074,6 +1082,7 @@ function App() {
         body: JSON.stringify(data),
       })
       if (response.ok) {
+        trackEvent('contact-sent')
         setFormStatus('sent')
         form.reset()
         setTimeout(() => setFormStatus(null), 3000)
@@ -1265,6 +1274,7 @@ function App() {
       label: lang === 'en' ? 'Open printable CV' : 'Deschide CV printabil',
       shortcut: 'V',
       action: () => {
+        trackCvDownload()
         window.open(cvHref, '_blank', 'noreferrer')
       },
     },
@@ -1273,6 +1283,7 @@ function App() {
       label: lang === 'en' ? 'Transmit email signal' : 'Trimite semnal email',
       shortcut: 'E',
       action: () => {
+        trackEvent('email-click')
         window.location.href = 'mailto:paraschiv.cristian93@outlook.com'
       },
     },
@@ -1451,7 +1462,7 @@ function App() {
           >
             {recruiterMode ? 'RECRUIT' : 'RECRUITER'}
           </button>
-          <a className="cv-link" href={cvHref} download={cvFile}>
+          <a className="cv-link" href={cvHref} download={cvFile} onClick={trackCvDownload}>
             CV
           </a>
           <button 
@@ -1467,7 +1478,7 @@ function App() {
           >
             {lang === 'en' ? 'RO' : 'EN'}
           </button>
-          <a className="nav-cta" href="mailto:paraschiv.cristian93@outlook.com">
+          <a className="nav-cta" href="mailto:paraschiv.cristian93@outlook.com" onClick={() => trackEvent('email-click')}>
             {t.letsTalk}
           </a>
         </div>
@@ -1534,10 +1545,10 @@ function App() {
                   </p>
                 </div>
                 <div className="recruiter-actions">
-                  <a className="btn primary" href={cvHref} download={cvFile}>
+                  <a className="btn primary" href={cvHref} download={cvFile} onClick={trackCvDownload}>
                     {lang === 'en' ? 'Download CV' : 'Descarca CV'}
                   </a>
-                  <a className="btn ghost" href="mailto:paraschiv.cristian93@outlook.com">
+                  <a className="btn ghost" href="mailto:paraschiv.cristian93@outlook.com" onClick={() => trackEvent('email-click')}>
                     {lang === 'en' ? 'Email Cristian' : 'Email Cristian'}
                   </a>
                 </div>
@@ -1908,7 +1919,7 @@ function App() {
             <div className="contact-card">
               <div>
                 <span className="contact-label">{t.email}</span>
-                <a href="mailto:paraschiv.cristian93@outlook.com">
+                <a href="mailto:paraschiv.cristian93@outlook.com" onClick={() => trackEvent('email-click')}>
                   paraschiv.cristian93@outlook.com
                 </a>
               </div>
