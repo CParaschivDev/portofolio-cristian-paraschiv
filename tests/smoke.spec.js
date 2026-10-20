@@ -6,8 +6,8 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem('portfolio-booted', 'true')
     localStorage.setItem('portfolio-lang', 'en')
   })
-  // External thumbnails and fonts are not part of what we test.
-  await page.route(/^https:\/\/(i\.ytimg\.com|opengraph\.githubassets\.com|fonts\.)/, (route) =>
+  // External thumbnails, fonts and analytics are not part of what we test.
+  await page.route(/^https:\/\/(i\.ytimg\.com|opengraph\.githubassets\.com|fonts\.|gc\.zgo\.at)/, (route) =>
     route.abort(),
   )
 })
@@ -84,4 +84,26 @@ test('static files are published', async ({ request }) => {
     const response = await request.get(path)
     expect(response.status(), path).toBe(200)
   }
+})
+
+test('analytics events fire for case studies, CV downloads and email clicks', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__events = []
+    window.goatcounter = { count: (event) => window.__events.push(event.path) }
+  })
+  await page.goto('./')
+
+  await page.locator('.project-cta').first().click()
+  await page.keyboard.press('Escape')
+  await page.locator('.cv-link').evaluate((link) => {
+    link.addEventListener('click', (event) => event.preventDefault(), { once: true })
+    link.click()
+  })
+  await page.locator('.nav-cta').evaluate((link) => {
+    link.addEventListener('click', (event) => event.preventDefault(), { once: true })
+    link.click()
+  })
+
+  const events = await page.evaluate(() => window.__events)
+  expect(events).toEqual(['case-study/3ks-judo-club-website', 'cv-download-en', 'email-click'])
 })
