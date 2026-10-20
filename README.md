@@ -29,7 +29,15 @@ npm run build    # production build in dist/
 
 ## Updating the CV
 
-The CV source is `public/Cristian-Paraschiv-CV.html`. After editing it, regenerate `public/Cristian-Paraschiv-CV.pdf` by printing the HTML page to PDF (A4) from Chrome or with Playwright.
+The CV sources are `public/Cristian-Paraschiv-CV.html` (English) and `public/Cristian-Paraschiv-CV-RO.html` (Romanian). After editing one, regenerate the matching PDF (`Cristian-Paraschiv-CV.pdf` / `Cristian-Paraschiv-CV-RO.pdf`) by printing the HTML page to PDF (A4) from Chrome or with Playwright. The site links the CV that matches the selected language.
+
+## Tests
+
+```bash
+npm run test:e2e   # Playwright smoke tests against the production build
+```
+
+CI (`.github/workflows/ci.yml`) runs lint, build and these tests on every pull request.
 
 ## Contact
 
