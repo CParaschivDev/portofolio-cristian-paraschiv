@@ -36,6 +36,23 @@ const getProjectThumbnail = (link) => {
   return null
 }
 
+// Tracks a CSS media query, so effects that are hidden by CSS on a device are not mounted at all.
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(
+    () => typeof window !== 'undefined' && Boolean(window.matchMedia?.(query).matches)
+  )
+
+  useEffect(() => {
+    const media = window.matchMedia?.(query)
+    if (!media) return undefined
+    const onChange = (event) => setMatches(event.matches)
+    media.addEventListener('change', onChange)
+    return () => media.removeEventListener('change', onChange)
+  }, [query])
+
+  return matches
+}
+
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
@@ -930,6 +947,8 @@ function App() {
   const [projectQuery, setProjectQuery] = useState('')
 
   const t = translations[lang]
+  const hasFinePointer = useMediaQuery('(pointer: fine)')
+  const isWideScreen = useMediaQuery('(min-width: 1101px)')
   const modalRef = useFocusTrap(Boolean(selectedSlug))
   const commandPanelRef = useFocusTrap(commandOpen, '.command-input')
   const cvFile = lang === 'ro' ? 'Cristian-Paraschiv-CV-RO.pdf' : 'Cristian-Paraschiv-CV.pdf'
@@ -1336,9 +1355,9 @@ function App() {
       )}
       <div className={`page ${booting ? 'hidden' : ''} ${reducedFx ? 'reduced-fx' : ''} ${recruiterMode ? 'recruiter-mode' : ''}`}>
         {!cleanView && <MatrixBackground darkMode={darkMode} />}
-        {!cleanView && <CustomCursor />}
-        {!cleanView && <SystemHUD />}
-        {!cleanView && (
+        {!cleanView && hasFinePointer && <CustomCursor />}
+        {!cleanView && isWideScreen && <SystemHUD />}
+        {!cleanView && isWideScreen && (
           <MissionRail
             activeSection={activeSection}
             sections={missionSections}
@@ -1440,7 +1459,7 @@ function App() {
             className="command-trigger"
             type="button"
             onClick={() => setCommandOpen(true)}
-            aria-label="Open command palette"
+            title={lang === 'en' ? 'Open command palette' : 'Deschide paleta de comenzi'}
           >
             CTRL K
           </button>
@@ -1449,7 +1468,7 @@ function App() {
             type="button"
             onClick={toggleFx}
             aria-pressed={reducedFx}
-            aria-label={reducedFx ? 'Restore full effects' : 'Enable stealth mode'}
+            title={reducedFx ? 'Restore full effects' : 'Enable stealth mode'}
           >
             {reducedFx ? 'STEALTH' : 'FX ON'}
           </button>
@@ -1458,7 +1477,7 @@ function App() {
             type="button"
             onClick={() => setRecruiterMode((enabled) => !enabled)}
             aria-pressed={recruiterMode}
-            aria-label={recruiterMode ? 'Exit recruiter mode' : 'Enable recruiter mode'}
+            title={recruiterMode ? 'Exit recruiter mode' : 'Enable recruiter mode'}
           >
             {recruiterMode ? 'RECRUIT' : 'RECRUITER'}
           </button>
