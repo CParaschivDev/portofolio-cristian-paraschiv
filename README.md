@@ -39,6 +39,17 @@ npm run test:e2e   # Playwright smoke tests against the production build
 
 CI (`.github/workflows/ci.yml`) runs lint, build and these tests on every pull request.
 
+## Analytics
+
+Visits are counted with [GoatCounter](https://www.goatcounter.com) (no cookies; `localhost` is ignored). Dashboard: https://phantasm.goatcounter.com
+
+Custom events sent by `trackEvent()` in `src/App.jsx`:
+
+- `case-study/<slug>`: a case study was opened
+- `cv-download-en` / `cv-download-ro`: a CV was downloaded
+- `email-click`: an email link was clicked
+- `contact-sent`: the contact form was sent
+
 ## Contact
 
 - Email: paraschiv.cristian93@outlook.com
